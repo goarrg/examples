@@ -25,7 +25,6 @@ import (
 	"goarrg.com"
 	"goarrg.com/debug"
 	"goarrg.com/examples/shared/gl2d"
-	"goarrg.com/input"
 )
 
 type program struct {
@@ -47,7 +46,7 @@ func (p *program) Init() error {
 	return nil
 }
 
-func (p *program) Update(deltaTime float64, driver input.Snapshot) {
+func (p *program) Update(deltaTime float64) {
 	gl2d.Render(p.sprite)
 }
 

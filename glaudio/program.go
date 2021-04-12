@@ -24,7 +24,6 @@ import (
 
 	"goarrg.com"
 	"goarrg.com/debug"
-	"goarrg.com/input"
 )
 
 type program struct {
@@ -41,7 +40,7 @@ func (p *program) Init() error {
 	return nil
 }
 
-func (p *program) Update(deltaTime float64, driver input.Snapshot) {
+func (p *program) Update(deltaTime float64) {
 	select {
 	case <-p.timer.C:
 		err := PlaySound("test2.wav")

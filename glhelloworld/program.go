@@ -55,13 +55,9 @@ func (p *program) Init() error {
 // Update function is called every frame
 // deltaTime is time between frames as reported by the renderer
 // driver is snapshot of input events for current frame
-func (p *program) Update(deltaTime float64, driver input.Snapshot) {
+func (p *program) Update(deltaTime float64) {
 	// gets the mouse device
-	mouse, err := driver.Device(input.DeviceTypeMouse)
-
-	if debug.LogErr(err) {
-		os.Exit(1)
-	}
+	mouse := input.GetDeviceOfType(input.DeviceTypeMouse)
 
 	// gets state for mouse pos and assert it to a input.Coords
 	mousePos := mouse.StateFor(input.MouseMotion).(input.Coords)
