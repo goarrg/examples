@@ -57,7 +57,7 @@ func (p *program) Init() error {
 // driver is snapshot of input events for current frame
 func (p *program) Update(deltaTime float64) {
 	// gets the mouse device
-	mouse := input.GetDeviceOfType(input.DeviceTypeMouse)
+	mouse := input.DeviceOfType(input.DeviceTypeMouse)
 
 	// gets state for mouse pos and assert it to a input.Coords
 	mousePos := mouse.StateFor(input.MouseMotion).(input.Coords)
