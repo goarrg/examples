@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	_ "goarrg.com/cmd/goarrg"
 )
 
 func TestExamples(t *testing.T) {
