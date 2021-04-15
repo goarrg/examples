@@ -1,5 +1,5 @@
-goarrg.com v0.0.0-20210413213047-c476baffe378 h1:pSgu128Y/0cS0pqTgfGLjEVjJhwaBkGbiSh8mRZXcEg=
-goarrg.com v0.0.0-20210413213047-c476baffe378/go.mod h1:qHpOpAv/ErTss8v6uMsIswiuxalrfPiDs45IjFOKjKw=
+goarrg.com v0.0.0-20210415144827-5b1b193f7502 h1:IcjIXARASLDsg3awFY6rw7YD7Q6m+G6uxyQNScL0gv0=
+goarrg.com v0.0.0-20210415144827-5b1b193f7502/go.mod h1:qHpOpAv/ErTss8v6uMsIswiuxalrfPiDs45IjFOKjKw=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20201217014255-9d1352758620 h1:3wPMTskHO3+O6jqTEXyFcsnuxMQOqYSaHsDxcbUXpqA=
 golang.org/x/crypto v0.0.0-20201217014255-9d1352758620/go.mod h1:jdWPYTVW3xRLrWPugEBEK3UY2ZEsg3UU495nc5E+M+I=

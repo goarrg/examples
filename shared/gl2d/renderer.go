@@ -30,6 +30,7 @@ import (
 
 	"goarrg.com"
 	"goarrg.com/debug"
+	"goarrg.com/gmath"
 )
 
 type gl2d struct {
@@ -206,6 +207,11 @@ func (r *gl2d) runAsync(f func()) {
 	go func() {
 		r.jobs <- f
 	}()
+}
+
+func ScreenPosToWorld(pos gmath.Point3f64) gmath.Point3f64 {
+	ndc := gmath.Vector3f64(pos).ScaleInverse(gmath.Vector3f64{X: float64(Renderer.screenW), Y: float64(Renderer.screenH)})
+	return gmath.Point3f64(ndc.Scale(gmath.Vector3f64{X: float64(Renderer.resW), Y: float64(Renderer.resH)}))
 }
 
 // call this function to draw stuff, renderer does not draw anything you don't tell it to
