@@ -63,7 +63,7 @@ func (p *program) Update(deltaTime float64) {
 	mousePos := mouse.StateFor(input.MouseMotion).(input.Coords)
 
 	// sets sprite pos to mouse pos
-	p.sprite.SetPos(mousePos.Point3f64)
+	p.sprite.SetPos(gl2d.ScreenPosToWorld(mousePos.Point3f64))
 	// draw sprite
 	gl2d.Render(p.sprite)
 }
