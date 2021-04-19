@@ -87,10 +87,6 @@ func (r *renderer) Resize(int, int) {
 	}
 }
 
-func (r *renderer) Shutdown() {
-
-}
-
 func (r *renderer) Destroy() {
 	C.vkDeviceWaitIdle(&r.cRenderer)
 

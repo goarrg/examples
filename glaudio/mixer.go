@@ -142,9 +142,6 @@ func (a *audioMixer) Mix() (int, audio.Track) {
 func (a *audioMixer) Update() {
 }
 
-func (a *audioMixer) Shutdown() {
-}
-
 func (a *audioMixer) Destroy() {
 }
 
