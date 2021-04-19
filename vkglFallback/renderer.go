@@ -62,10 +62,6 @@ func (r *renderer) Resize(x int, y int) {
 	r.gl2d.Resize(x, y)
 }
 
-func (r *renderer) Shutdown() {
-	r.gl2d.Shutdown()
-}
-
 func (r *renderer) Destroy() {
 	r.gl2d.Destroy()
 }

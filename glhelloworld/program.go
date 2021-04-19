@@ -32,8 +32,7 @@ type program struct {
 	sprite gl2d.Sprite
 }
 
-// Init function is called only once,
-// engine will exit if error
+// Init is called only once, engine will exit if error
 func (p *program) Init() error {
 	// auto shutdown after 5 seconds
 	time.AfterFunc(time.Second*5, func() {
@@ -52,9 +51,10 @@ func (p *program) Init() error {
 	return nil
 }
 
-// Update function is called every frame
-// deltaTime is time between frames as reported by the renderer
-// driver is snapshot of input events for current frame
+/*
+	Update is called every frame, deltaTime is time between frames as reported
+	by the renderer.
+*/
 func (p *program) Update(deltaTime float64) {
 	// gets the mouse device
 	mouse := input.DeviceOfType(input.DeviceTypeMouse)
@@ -68,14 +68,16 @@ func (p *program) Update(deltaTime float64) {
 	gl2d.Render(p.sprite)
 }
 
-// Shutdown function is called when goarrg.Shutdown() is called
-// if function returns false, shutdown is avoided
-// this is useful to have user confirmation or to make sure everything's flushed to disk
-// you have to call goarrg.Shutdown() if you returned false and want to shutdown
+/*
+	Shutdown is called when goarrg.Shutdown() was signaled and after the
+	main loop has finished. Returning false will cancel the shutdown unless
+	a SIGINT was received then Shutdown() will not be called and will not be able
+	to avoid termination.
+*/
 func (p *program) Shutdown() bool {
 	return true
 }
 
-// Destroy is called after shutdown confirmation and all shutdown functions
+// Destroy is called when it is time to terminate
 func (p *program) Destroy() {
 }

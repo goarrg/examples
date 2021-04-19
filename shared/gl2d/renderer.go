@@ -194,11 +194,7 @@ func (r *gl2d) Resize(w, h int) {
 	r.screenH = h
 }
 
-// Shutdown is called on goarrg.Shutdown() but only after confirmation from program.Shutdown()
-func (r *gl2d) Shutdown() {
-}
-
-// Destroy is called after shutdown confirmation and all shutdown functions
+// Destroy is called when it is time to terminate
 func (r *gl2d) Destroy() {
 
 }
