@@ -1,4 +1,4 @@
-//+build !disable_gl !disable_vk
+//+build !disable_gl,!disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -27,8 +27,10 @@ type renderer struct {
 	gl2d goarrg.GLRenderer
 }
 
-var _ goarrg.VkRenderer = &renderer{}
-var _ goarrg.GLRenderer = &renderer{}
+var (
+	_ goarrg.VkRenderer = &renderer{}
+	_ goarrg.GLRenderer = &renderer{}
+)
 
 func (r *renderer) VkConfig() goarrg.VkConfig {
 	return goarrg.VkConfig{
@@ -51,7 +53,6 @@ func (r *renderer) GLInit(vkInstance goarrg.GLInstance) error {
 }
 
 func (r *renderer) Update() {
-
 }
 
 func (r *renderer) Draw() float64 {

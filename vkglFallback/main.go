@@ -1,4 +1,4 @@
-//+build !disable_gl !disable_vk
+//+build !disable_gl,!disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -19,7 +19,7 @@ limitations under the License.
 package main
 
 /*
-	#cgo pkg-config: sdl2-static
+	#cgo pkg-config: --static sdl2
 */
 import "C"
 import (

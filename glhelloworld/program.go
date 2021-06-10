@@ -20,9 +20,7 @@ package main
 
 import (
 	"os"
-	"time"
 
-	"goarrg.com"
 	"goarrg.com/debug"
 	"goarrg.com/examples/shared/gl2d"
 	"goarrg.com/input"
@@ -34,11 +32,6 @@ type program struct {
 
 // Init is called only once, engine will exit if error
 func (p *program) Init() error {
-	// auto shutdown after 5 seconds
-	time.AfterFunc(time.Second*5, func() {
-		goarrg.Shutdown()
-	})
-
 	// loads a sprite
 	s, err := gl2d.SpriteLoad("test.png")
 

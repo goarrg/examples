@@ -1,4 +1,4 @@
-//+build !disable_gl !disable_vk
+//+build !disable_gl,!disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -20,9 +20,7 @@ package main
 
 import (
 	"os"
-	"time"
 
-	"goarrg.com"
 	"goarrg.com/debug"
 	"goarrg.com/examples/shared/gl2d"
 )
@@ -32,10 +30,6 @@ type program struct {
 }
 
 func (p *program) Init() error {
-	time.AfterFunc(time.Second*5, func() {
-		goarrg.Shutdown()
-	})
-
 	s, err := gl2d.SpriteLoad("test.png")
 
 	if debug.LogErr(err) {

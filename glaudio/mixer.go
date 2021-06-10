@@ -66,7 +66,6 @@ func (a *audioMixer) Init(cfg goarrg.AudioConfig) error {
 	a.spec = cfg.Spec
 
 	s, err := audio.Load(Mixer.musicFile)
-
 	if err != nil {
 		return err
 	}
@@ -147,7 +146,6 @@ func (a *audioMixer) Destroy() {
 
 func PlaySound(sound string) error {
 	s, err := audio.Load(sound)
-
 	if err != nil {
 		return err
 	}

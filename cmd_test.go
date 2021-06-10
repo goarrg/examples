@@ -1,7 +1,7 @@
-//+build !disable_gl
+//+build !windows
 
 /*
-Copyright 2020 The goARRG Authors.
+Copyright 2021 The goARRG Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,11 +16,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package texture
+package examples
 
-/*
-	#cgo pkg-config: --static sdl2
-	#cgo linux LDFLAGS: -lGL
-	#cgo windows LDFLAGS: -lopengl32
-*/
-import "C"
+import (
+	"os"
+	"os/exec"
+	"testing"
+)
+
+func runCommand(filename string) *exec.Cmd {
+	cmd := exec.Command(filename)
+	return cmd
+}
+
+func sigInterrupt(t *testing.T, process *os.Process) {
+	err := process.Signal(os.Interrupt)
+	if err != nil {
+		t.Fatal(err)
+	}
+}

@@ -19,7 +19,7 @@ limitations under the License.
 package main
 
 /*
-	#cgo pkg-config: sdl2-static
+	#cgo pkg-config: --static sdl2
 */
 import "C"
 import (
