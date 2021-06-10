@@ -1,4 +1,4 @@
-//+build !disable_vk
+//+build !disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -34,7 +34,7 @@ func init() {
 }
 
 func main() {
-	//debug.LogSetLevel(debug.LogLevelError)
+	// debug.LogSetLevel(debug.LogLevelError)
 	err := sdl.Setup(sdl.Config{
 		Window: sdl.WindowConfig{
 			Rect: gmath.Recti{X: -1, Y: -1, W: 800, H: 600},

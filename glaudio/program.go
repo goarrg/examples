@@ -22,7 +22,6 @@ import (
 	"os"
 	"time"
 
-	"goarrg.com"
 	"goarrg.com/debug"
 )
 
@@ -31,10 +30,6 @@ type program struct {
 }
 
 func (p *program) Init() error {
-	time.AfterFunc(time.Second*5, func() {
-		goarrg.Shutdown()
-	})
-
 	p.timer = time.NewTimer(time.Millisecond * 500)
 
 	return nil

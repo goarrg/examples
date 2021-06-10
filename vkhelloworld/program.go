@@ -1,4 +1,4 @@
-//+build !disable_vk
+//+build !disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -18,20 +18,9 @@ limitations under the License.
 
 package main
 
-import (
-	"time"
-
-	"goarrg.com"
-)
-
-type program struct {
-}
+type program struct{}
 
 func (p *program) Init() error {
-	time.AfterFunc(time.Second*5, func() {
-		goarrg.Shutdown()
-	})
-
 	return nil
 }
 

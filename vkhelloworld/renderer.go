@@ -1,4 +1,4 @@
-//+build !disable_vk
+//+build !disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -19,7 +19,7 @@ limitations under the License.
 package main
 
 /*
-	#cgo pkg-config: vulkan sdl2-static
+	#cgo pkg-config: --static vulkan sdl2
 	#cgo LDFLAGS: -lstdc++
 
 	#include "renderer.h"

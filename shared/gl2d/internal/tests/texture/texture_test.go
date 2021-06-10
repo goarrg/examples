@@ -37,7 +37,6 @@ func TestTextureClose(t *testing.T) {
 
 	for i := 0; i < numSprites; i++ {
 		s, err := gl2d.SpriteLoad("test.png")
-
 		if err != nil {
 			t.Fatal(err)
 		}
