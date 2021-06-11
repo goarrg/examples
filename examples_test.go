@@ -39,7 +39,7 @@ func TestExamples(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	defer os.Remove(tmpDir)
+	defer os.RemoveAll(tmpDir)
 
 	for _, f := range files {
 		f := f
