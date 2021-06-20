@@ -42,7 +42,7 @@ func SpriteLoad(file string) (Sprite, error) {
 	t, err := textureLoad(file)
 
 	if err != nil {
-		return Sprite{}, debug.ErrorWrap(err, "Failed to load sprite")
+		return Sprite{}, debug.ErrorWrapf(err, "Failed to load sprite")
 	}
 
 	return Sprite{
@@ -66,7 +66,7 @@ func (s *Sprite) SetTexture(file string) error {
 	t, err := textureLoad(file)
 
 	if err != nil {
-		return debug.ErrorWrap(err, "Failed to set texture")
+		return debug.ErrorWrapf(err, "Failed to set texture")
 	}
 
 	s.texture = t
