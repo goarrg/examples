@@ -45,7 +45,7 @@ func (r *renderer) GLConfig() goarrg.GLConfig {
 }
 
 func (r *renderer) VkInit(vkInstance goarrg.VkInstance) error {
-	return debug.ErrorNew("Test GL fallback")
+	return debug.Errorf("Test GL fallback")
 }
 
 func (r *renderer) GLInit(vkInstance goarrg.GLInstance) error {

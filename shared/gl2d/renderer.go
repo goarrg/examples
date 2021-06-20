@@ -65,7 +65,7 @@ type Config struct {
 // setups renderer resolution
 func Setup(cfg Config) error {
 	if cfg.ResW <= 0 || cfg.ResH <= 0 {
-		return debug.ErrorNew("Invalid config %+v", cfg)
+		return debug.Errorf("Invalid config %+v", cfg)
 	}
 
 	Renderer.resW = cfg.ResW

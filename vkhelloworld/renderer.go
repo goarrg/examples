@@ -57,15 +57,15 @@ func (r *renderer) VkInit(vkInstance goarrg.VkInstance) error {
 	)
 
 	if cErr := C.vkInitLog(&r.cRenderer); cErr != C.VK_SUCCESS {
-		return debug.ErrorWrap(debug.ErrorNew(vkResultStr(cErr)), "Failed to init vk logger")
+		return debug.ErrorWrapf(debug.Errorf(vkResultStr(cErr)), "Failed to init vk logger")
 	}
 
 	if cErr := C.vkInitDevice(&r.cRenderer); cErr != C.VK_SUCCESS {
-		return debug.ErrorWrap(debug.ErrorNew(vkResultStr(cErr)), "Failed to init vk device")
+		return debug.ErrorWrapf(debug.Errorf(vkResultStr(cErr)), "Failed to init vk device")
 	}
 
 	if cErr := C.vkInitSwapChain(&r.cRenderer); cErr != C.VK_SUCCESS {
-		return debug.ErrorWrap(debug.ErrorNew(vkResultStr(cErr)), "Failed to init vk swap chain")
+		return debug.ErrorWrapf(debug.Errorf(vkResultStr(cErr)), "Failed to init vk swap chain")
 	}
 	return nil
 }
@@ -83,7 +83,7 @@ func (r *renderer) Resize(int, int) {
 	C.vkDeviceWaitIdle(&r.cRenderer)
 	C.vkDestroySwapChain(&r.cRenderer)
 	if cErr := C.vkInitSwapChain(&r.cRenderer); cErr != C.VK_SUCCESS {
-		panic(debug.ErrorWrap(debug.ErrorNew(vkResultStr(cErr)), "Failed to init vk swap chain"))
+		panic(debug.ErrorWrapf(debug.Errorf(vkResultStr(cErr)), "Failed to init vk swap chain"))
 	}
 }
 

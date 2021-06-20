@@ -67,20 +67,20 @@ func textureLoad(file string) (*texture, error) {
 	a, err := asset.Load(file)
 
 	if err != nil {
-		return nil, debug.ErrorWrap(err, "Failed to load texture")
+		return nil, debug.ErrorWrapf(err, "Failed to load texture")
 	}
 
 	img, _, err := image.Decode(a.Reader())
 
 	if err != nil {
-		return nil, debug.ErrorWrap(err, "Failed to load texture")
+		return nil, debug.ErrorWrapf(err, "Failed to load texture")
 	}
 
 	switch t := img.(type) {
 	case *image.RGBA:
 	case *image.NRGBA:
 	default:
-		return nil, debug.ErrorNew("Unsupported image format %T", t)
+		return nil, debug.Errorf("Unsupported image format %T", t)
 	}
 
 	t := texture{
@@ -118,7 +118,7 @@ func textureLoad(file string) (*texture, error) {
 
 		if glErr != C.GL_NO_ERROR {
 			for ; glErr != C.GL_NO_ERROR; glErr = C.glGetError() {
-				debug.LogE("Error during processing texture %s %v", t.filename, debug.ErrorNew(C.GoString((*C.char)(unsafe.Pointer(C.gluErrorString(glErr))))))
+				debug.LogE("Error during processing texture %s %v", t.filename, debug.Errorf(C.GoString((*C.char)(unsafe.Pointer(C.gluErrorString(glErr))))))
 			}
 			return
 		}
