@@ -118,7 +118,7 @@ func textureLoad(file string) (*texture, error) {
 
 		if glErr != C.GL_NO_ERROR {
 			for ; glErr != C.GL_NO_ERROR; glErr = C.glGetError() {
-				debug.LogE("Error during processing texture %s %v", t.filename, debug.Errorf(C.GoString((*C.char)(unsafe.Pointer(C.gluErrorString(glErr))))))
+				debug.EPrintf("Error during processing texture %s %v", t.filename, debug.Errorf(C.GoString((*C.char)(unsafe.Pointer(C.gluErrorString(glErr))))))
 			}
 			return
 		}
@@ -138,13 +138,13 @@ func textureLoad(file string) (*texture, error) {
 }
 
 func (t *texture) close() {
-	debug.LogI("Decrementing reference for texture %q", t.filename)
+	debug.IPrintf("Decrementing reference for texture %q", t.filename)
 	if atomic.AddInt64(t.refs, -1) <= 0 {
 		Renderer.textureLock.Lock()
 		defer Renderer.textureLock.Unlock()
 
 		if t, ok := Renderer.textures[t.filename]; ok {
-			debug.LogI("Deleting unused texture %q", t.filename)
+			debug.IPrintf("Deleting unused texture %q", t.filename)
 			Renderer.runAsync(func() {
 				C.glDeleteTextures(1, &t.id)
 			})

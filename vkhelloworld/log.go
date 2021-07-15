@@ -56,13 +56,13 @@ func goVkLog(cMessageSeverity C.VkDebugUtilsMessageSeverityFlagBitsEXT,
 
 	switch cMessageSeverity {
 	case C.VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-		debug.LogV(format, args...)
+		debug.VPrintf(format, args...)
 	case C.VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-		debug.LogI(format, args...)
+		debug.IPrintf(format, args...)
 	case C.VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-		debug.LogW(format, args...)
+		debug.WPrintf(format, args...)
 	case C.VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-		debug.LogE(format, args...)
+		debug.EPrintf(format, args...)
 	}
 
 	return C.VK_FALSE
