@@ -40,7 +40,8 @@ func (p *program) Update(deltaTime float64) {
 	case <-p.timer.C:
 		err := PlaySound("test2.wav")
 
-		if debug.LogErr(err) {
+		if err != nil {
+			debug.EPrint(err)
 			os.Exit(1)
 		}
 

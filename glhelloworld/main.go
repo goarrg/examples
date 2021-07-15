@@ -53,7 +53,8 @@ func main() {
 	})
 
 	// if error, exit
-	if debug.LogErr(err) {
+	if err != nil {
+		debug.EPrint(err)
 		os.Exit(1)
 	}
 
@@ -66,7 +67,8 @@ func main() {
 	})
 
 	// if error, exit
-	if debug.LogErr(err) {
+	if err != nil {
+		debug.EPrint(err)
 		os.Exit(1)
 	}
 }

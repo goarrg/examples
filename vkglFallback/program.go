@@ -32,7 +32,8 @@ type program struct {
 func (p *program) Init() error {
 	s, err := gl2d.SpriteLoad("test.png")
 
-	if debug.LogErr(err) {
+	if err != nil {
+		debug.EPrint(err)
 		os.Exit(1)
 	}
 

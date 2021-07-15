@@ -51,13 +51,15 @@ func main() {
 		},
 	})
 
-	if debug.LogErr(err) {
+	if err != nil {
+		debug.EPrint(err)
 		os.Exit(1)
 	}
 
 	err = Setup("test.wav")
 
-	if debug.LogErr(err) {
+	if err != nil {
+		debug.EPrint(err)
 		os.Exit(1)
 	}
 
@@ -68,7 +70,8 @@ func main() {
 		Program:  &program{},
 	})
 
-	if debug.LogErr(err) {
+	if err != nil {
+		debug.EPrint(err)
 		os.Exit(1)
 	}
 
