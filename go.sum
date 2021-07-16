@@ -1,6 +1,6 @@
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
-goarrg.com v0.0.0-20210715003555-a30ea61f23cd h1:vxBbjDxZMBGMhor81MIBbPWahE7/npV/KGIHxUAT4Us=
-goarrg.com v0.0.0-20210715003555-a30ea61f23cd/go.mod h1:ydueOa0omsR1HNgb8dODoRlWRev5mLe10txIR3S2erA=
+goarrg.com v0.0.0-20210716222135-81c97b6fd80b h1:q4VxIXUZEpx9bi0vEmARgNFmPI43ssBvIN+494iV09Q=
+goarrg.com v0.0.0-20210716222135-81c97b6fd80b/go.mod h1:ydueOa0omsR1HNgb8dODoRlWRev5mLe10txIR3S2erA=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 h1:/UOmuWzQfxxo9UtlXMwuQU8CMgg1eZXqTRwkSQJWKOI=

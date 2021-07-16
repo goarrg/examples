@@ -32,6 +32,7 @@ package main
 	}
 */
 import "C"
+
 import (
 	"goarrg.com"
 	"goarrg.com/debug"
@@ -51,7 +52,7 @@ func (r *renderer) VkConfig() goarrg.VkConfig {
 
 func (r *renderer) VkInit(vkInstance goarrg.VkInstance) error {
 	C.vkInitPlatform(&r.cRenderer,
-		C.uintptr_t(vkInstance.Ptr()),
+		C.uintptr_t(vkInstance.Uintptr()),
 		C.uintptr_t(vkInstance.Surface()),
 		C.uintptr_t(vkInstance.ProcAddr()),
 	)
@@ -71,7 +72,6 @@ func (r *renderer) VkInit(vkInstance goarrg.VkInstance) error {
 }
 
 func (r *renderer) Update() {
-
 }
 
 func (r *renderer) Draw() float64 {
