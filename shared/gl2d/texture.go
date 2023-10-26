@@ -1,4 +1,5 @@
-//+build !disable_gl
+//go:build !disable_gl
+// +build !disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -25,6 +26,7 @@ package gl2d
 	#include <GL/glu.h>
 */
 import "C"
+
 import (
 	"image"
 	"runtime"
@@ -65,13 +67,11 @@ func textureLoad(file string) (*texture, error) {
 	}
 
 	a, err := asset.Load(file)
-
 	if err != nil {
 		return nil, debug.ErrorWrapf(err, "Failed to load texture")
 	}
 
-	img, _, err := image.Decode(a.Reader())
-
+	img, _, err := image.Decode(a)
 	if err != nil {
 		return nil, debug.ErrorWrapf(err, "Failed to load texture")
 	}
@@ -85,7 +85,7 @@ func textureLoad(file string) (*texture, error) {
 
 	t := texture{
 		refs:     new(int64),
-		filename: a.Filename(),
+		filename: a.Name(),
 		resolution: gmath.Vector3i{
 			X: img.Bounds().Dx(),
 			Y: img.Bounds().Dy(),

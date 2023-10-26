@@ -17,7 +17,7 @@ limitations under the License.
 #include <stdlib.h>
 #include <string.h>
 
-#include "deferfree.h"
+#include "defer.hpp"
 #include "renderer.h"
 
 static char const* const deviceExtensions[] = {"VK_KHR_swapchain"};
@@ -45,8 +45,9 @@ VkResult vkInitDevice(renderer* r) {
 		return VK_ERROR_INCOMPATIBLE_DRIVER;
 	}
 
-	defer_free(VkPhysicalDevice*, devices) =
+	VkPhysicalDevice* devices =
 		(VkPhysicalDevice*)calloc(numDevices, sizeof(VkPhysicalDevice));
+	DEFER([&]() { free(devices); });
 	ret = vkEnumeratePhysicalDevices(r->instance, &numDevices, devices);
 
 	if (ret != VK_SUCCESS) {
@@ -54,13 +55,16 @@ VkResult vkInitDevice(renderer* r) {
 	}
 
 	uint32_t numExtensions = 0;
-	defer_free(VkExtensionProperties*, extensions) = NULL;
+	VkExtensionProperties* extensions = NULL;
+	DEFER([&]() { free(extensions); });
 
 	uint32_t numQueueFamilies = 0;
-	defer_free(VkQueueFamilyProperties*, queueFamilies) = NULL;
+	VkQueueFamilyProperties* queueFamilies = NULL;
+	DEFER([&]() { free(queueFamilies); });
 
 	uint32_t numSurfaceFormats = 0;
-	defer_free(VkSurfaceFormatKHR*, surfaceFormats) = NULL;
+	VkSurfaceFormatKHR* surfaceFormats = NULL;
+	DEFER([&]() { free(surfaceFormats); });
 
 	for (uint32_t i = 0; i < numDevices; i++) {
 		r->physicalDevice = devices[i];
@@ -184,10 +188,10 @@ VkResult vkInitDevice(renderer* r) {
 
 			uint32_t j = 0;
 			for (; j < haveSurfaceFormats; j++) {
-				if (surfaceFormats[j].format == VK_FORMAT_B8G8R8A8_UNORM &&
+				if (surfaceFormats[j].format == VK_FORMAT_B8G8R8A8_SRGB &&
 					surfaceFormats[j].colorSpace ==
 						VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
-					r->surfaceFormat = surfaceFormats[i];
+					r->surfaceFormat = surfaceFormats[j];
 					break;
 				}
 			}
@@ -200,8 +204,10 @@ VkResult vkInitDevice(renderer* r) {
 		{
 			uint32_t numQueueCreateInfos =
 				2 - (r->graphicsQueueFamilyIndex == r->presentQueueFamilyIndex);
-			defer_free(VkDeviceQueueCreateInfo*, queueCreateInfos) =
-				calloc(numQueueCreateInfos, sizeof(VkDeviceQueueCreateInfo));
+			VkDeviceQueueCreateInfo* queueCreateInfos =
+				(VkDeviceQueueCreateInfo*)calloc(
+					numQueueCreateInfos, sizeof(VkDeviceQueueCreateInfo));
+			DEFER([&]() { free(queueCreateInfos); });
 
 			float queuePriority = 1.0f;
 			VkDeviceQueueCreateInfo queueCreateInfo = {};

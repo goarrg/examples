@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include "deferfree.h"
 #include "renderer.h"
 
 VkBool32 vkLog(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,

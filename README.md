@@ -20,12 +20,6 @@ Currently the examples support running on Ubuntu or Windows, 386 or amd64. Howev
 
 ## Setup
 Once all the dependencies are installed, assuming the current directory is the examples repo, you just need to:
-<pre><code>go run goarrg.com/cmd/goarrg install sdl2 -vv</code></pre>
+<pre><code>go test -count=1 -v .</code></pre>
 
-### Vulkan
-To run the Vulkan examples, after installing the SDK, assuming the current directory is the examples repo, you also need to run:
-<pre><code>go run goarrg.com/cmd/goarrg install vulkan -vv</code></pre>
-
-## Running
-To run the examples, excluding the `shared` folder, cd to the folder and run:
-<pre><code>go run goarrg.com/cmd/goarrg run -vv</code></pre>
+To disable vulkan/opengl tests pass the `-tags=disable_vk` or `-tags=disable_gl` arg respectively.

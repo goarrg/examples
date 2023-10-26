@@ -17,7 +17,7 @@ limitations under the License.
 #include <stdlib.h>
 #include <string.h>
 
-#include "deferfree.h"
+#include "defer.hpp"
 #include "renderer.h"
 
 VkResult vkInitSwapChain(renderer* r) {
@@ -69,8 +69,9 @@ VkResult vkInitSwapChain(renderer* r) {
 			return ret;
 		}
 
-		defer_free(VkPresentModeKHR*, presentModes) = (VkPresentModeKHR*)calloc(
+		VkPresentModeKHR* presentModes = (VkPresentModeKHR*)calloc(
 			numPresentModes, sizeof(VkPresentModeKHR));
+		DEFER([&]() { free(presentModes); });
 
 		ret = vkGetPhysicalDeviceSurfacePresentModesKHR(
 			r->physicalDevice, r->surface, &numPresentModes, presentModes);
@@ -323,8 +324,9 @@ VkResult vkInitSwapChain(renderer* r) {
 			return ret;
 		}
 
-		defer_free(VkImage*, swapChainImages) =
+		VkImage* swapChainImages =
 			(VkImage*)calloc(r->swapChainSz, sizeof(VkImage));
+		DEFER([&]() { free(swapChainImages); });
 		ret = vkGetSwapchainImagesKHR(r->device, r->swapChain, &r->swapChainSz,
 									  swapChainImages);
 

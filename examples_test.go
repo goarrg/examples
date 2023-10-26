@@ -20,15 +20,37 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
 	"time"
+
+	"goarrg.com/debug"
+	goarrg "goarrg.com/make"
+	"goarrg.com/toolchain"
+	"goarrg.com/toolchain/cgodep"
+	"goarrg.com/toolchain/golang"
 )
 
 func TestExamples(t *testing.T) {
+	target := toolchain.Target{OS: runtime.GOOS, Arch: runtime.GOARCH}
+	cgodep.Install()
+	golang.Setup(golang.Config{Target: target})
+	debug.IPrintf("Env:\n%s", toolchain.EnvString())
+
+	goarrg.Install(
+		goarrg.Config{
+			Target:    target,
+			SDL:       goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
+			VkHeaders: goarrg.VkHeadersConfig{Install: true},
+		},
+	)
+
+	if golang.ShouldCleanCache() {
+		golang.CleanCache()
+	}
+
 	files, err := os.ReadDir(".")
 	if err != nil {
 		panic(err)
@@ -71,17 +93,13 @@ func TestExamples(t *testing.T) {
 
 				// build
 				{
-					args := []string{"run", "goarrg.com/cmd/goarrg", "build", "--", "-o=" + filename}
+					args := []string{"build", "-o=" + filename}
 
 					if enableDebug {
 						args = append(args, "-tags=debug")
 					}
 
-					cmd := exec.Command("go", args...)
-					cmd.Dir = filepath.Join(".", f.Name())
-					cmd.Stderr = os.Stderr
-					cmd.Stdout = os.Stdout
-					if err := cmd.Run(); err != nil {
+					if err := toolchain.RunDir(f.Name(), "go", args...); err != nil {
 						t.Fatal(err)
 					}
 				}
@@ -106,7 +124,10 @@ func TestExamples(t *testing.T) {
 							// send quit signal but keep the scanner flushing to capture output
 							go func() {
 								time.Sleep(time.Second)
-								sigInterrupt(t, cmd.Process)
+								err := sigInterrupt(cmd.Process)
+								if err != nil {
+									t.Fatal(err)
+								}
 							}()
 						}
 						fmt.Fprintln(os.Stderr, s.Text())

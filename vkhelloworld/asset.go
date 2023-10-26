@@ -1,4 +1,5 @@
-//+build !disable_vk,amd64
+//go:build !disable_vk && amd64
+// +build !disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -22,21 +23,21 @@ package main
 	#include <stdint.h>
 */
 import "C"
+
 import (
 	"goarrg.com/asset"
 )
 
-var assets = map[string]asset.Asset{}
+var assets = map[string]*asset.File{}
 
 //export assetLoad
 func assetLoad(name *C.char, sz *C.size_t) C.uintptr_t {
 	a, err := asset.Load(C.GoString(name))
-
 	if err != nil {
 		panic(err)
 	}
 
-	assets[a.Filename()] = a
+	assets[a.Name()] = a
 	*sz = (C.size_t)(a.Size())
 
 	return C.uintptr_t(a.Uintptr())
