@@ -19,6 +19,10 @@ limitations under the License.
 #define VK_NO_PROTOTYPES
 #include <vulkan/vulkan.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define VK_PROC_ADDR(FN) PFN_##FN FN = (PFN_##FN)r->procAddr(r->instance, #FN)
 
 #define VK_PROC_ADDR_ERROR(FN)               \
@@ -67,7 +71,7 @@ extern VkBool32 goVkLog(VkDebugUtilsMessageSeverityFlagBitsEXT,
 						VkDebugUtilsMessengerCallbackDataEXT*,
 						void*);
 
-extern VkResult vkShaderLoad(renderer*, char*, VkShaderModule*);
+extern VkResult vkShaderLoad(renderer*, const char*, VkShaderModule*);
 
 extern VkResult vkInitLog(renderer*);
 extern VkResult vkInitDevice(renderer*);
@@ -79,3 +83,7 @@ extern void vkDraw(renderer*);
 extern void vkDestroyLog(renderer* r);
 extern void vkDestroyDevice(renderer* r);
 extern void vkDestroySwapChain(renderer* r);
+
+#ifdef __cplusplus
+}
+#endif

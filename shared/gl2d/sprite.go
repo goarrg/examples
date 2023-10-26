@@ -1,4 +1,5 @@
-//+build !disable_gl
+//go:build !disable_gl
+// +build !disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -25,6 +26,7 @@ package gl2d
 	#include <GL/glu.h>
 */
 import "C"
+
 import (
 	"goarrg.com/debug"
 	"goarrg.com/gmath"
@@ -40,7 +42,6 @@ type Sprite struct {
 // create a sprite to draw
 func SpriteLoad(file string) (Sprite, error) {
 	t, err := textureLoad(file)
-
 	if err != nil {
 		return Sprite{}, debug.ErrorWrapf(err, "Failed to load sprite")
 	}
@@ -64,7 +65,6 @@ func SpriteLoad(file string) (Sprite, error) {
 // change sprite texture
 func (s *Sprite) SetTexture(file string) error {
 	t, err := textureLoad(file)
-
 	if err != nil {
 		return debug.ErrorWrapf(err, "Failed to set texture")
 	}

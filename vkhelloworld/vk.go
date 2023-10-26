@@ -1,4 +1,5 @@
-//+build !disable_vk,amd64
+//go:build !disable_vk && amd64
+// +build !disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -19,12 +20,13 @@ limitations under the License.
 package main
 
 /*
-	#cgo pkg-config: vulkan
+	#cgo pkg-config: vulkan-headers
 
 	#define VK_NO_PROTOTYPES
 	#include <vulkan/vulkan.h>
 */
 import "C"
+
 import (
 	"fmt"
 )

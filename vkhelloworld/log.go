@@ -1,4 +1,5 @@
-//+build !disable_vk,amd64
+//go:build !disable_vk && amd64
+// +build !disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -19,11 +20,12 @@ limitations under the License.
 package main
 
 /*
-	#cgo pkg-config: vulkan
+	#cgo pkg-config: vulkan-headers
 
 	#include "renderer.h"
 */
 import "C"
+
 import (
 	"unsafe"
 
@@ -34,7 +36,8 @@ import (
 func goVkLog(cMessageSeverity C.VkDebugUtilsMessageSeverityFlagBitsEXT,
 	cMessageType C.VkDebugUtilsMessageTypeFlagsEXT,
 	cCallbackData *C.VkDebugUtilsMessengerCallbackDataEXT,
-	cUserData unsafe.Pointer) C.VkBool32 {
+	cUserData unsafe.Pointer,
+) C.VkBool32 {
 	format := "%s"
 	args := []interface{}{
 		C.GoString(cCallbackData.pMessage),

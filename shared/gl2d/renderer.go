@@ -1,4 +1,5 @@
-//+build !disable_gl
+//go:build !disable_gl
+// +build !disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -24,6 +25,7 @@ package gl2d
 	#include <GL/gl.h>
 */
 import "C"
+
 import (
 	"sync"
 	"time"
@@ -86,7 +88,7 @@ func (r *gl2d) GLInit(glInstance goarrg.GLInstance) error {
 	C.glBlendFunc(C.GL_SRC_ALPHA, C.GL_ONE_MINUS_SRC_ALPHA)
 	C.glDisable(C.GL_DEPTH_TEST)
 	C.glEnable(C.GL_CULL_FACE)
-	//C.glEnable(C.GL_MULTISAMPLE_ARB)
+	// C.glEnable(C.GL_MULTISAMPLE_ARB)
 
 	if r.resW <= 0 || r.resH <= 0 {
 		Renderer.resW = 800
@@ -196,7 +198,6 @@ func (r *gl2d) Resize(w, h int) {
 
 // Destroy is called when it is time to terminate
 func (r *gl2d) Destroy() {
-
 }
 
 func (r *gl2d) runAsync(f func()) {

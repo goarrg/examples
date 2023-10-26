@@ -23,11 +23,11 @@ limitations under the License.
 extern void* assetLoad(char*, size_t*);
 extern void assetFree(char*);
 
-VkResult vkShaderLoad(renderer* r, char* file, VkShaderModule* module) {
+VkResult vkShaderLoad(renderer* r, const char* file, VkShaderModule* module) {
 	VK_PROC_ADDR_ERROR(vkCreateShaderModule);
 
 	size_t sz;
-	void* bytes = assetLoad(file, &sz);
+	void* bytes = assetLoad((char*)file, &sz);
 
 	VkShaderModuleCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -36,7 +36,7 @@ VkResult vkShaderLoad(renderer* r, char* file, VkShaderModule* module) {
 
 	VkResult ret = vkCreateShaderModule(r->device, &createInfo, NULL, module);
 
-	assetFree(file);
+	assetFree((char*)file);
 
 	return ret;
 }

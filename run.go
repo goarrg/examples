@@ -1,5 +1,8 @@
+//go:build !windows
+// +build !windows
+
 /*
-Copyright 2020 The goARRG Authors.
+Copyright 2023 The goARRG Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,15 +16,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+package examples
 
-#pragma once
+import (
+	"os"
+	"os/exec"
+)
 
-#include <stdlib.h>
+func runCommand(filename string) *exec.Cmd {
+	cmd := exec.Command(filename)
+	return cmd
+}
 
-#ifdef __GNUC__
-#define defer_free(Type, Name)                          \
-	void __func__cleanup__##Name(Type* p) { free(*p); } \
-	__attribute__((__cleanup__(__func__cleanup__##Name))) Type Name
-#else
-#error Only supports GNUC
-#endif
+func sigInterrupt(process *os.Process) error {
+	return process.Signal(os.Interrupt)
+}

@@ -1,4 +1,5 @@
-//+build !disable_vk,amd64
+//go:build !disable_vk && amd64
+// +build !disable_vk,amd64
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -40,7 +41,6 @@ func main() {
 			Rect: gmath.Recti{X: -1, Y: -1, W: 800, H: 600},
 		},
 	})
-
 	if err != nil {
 		debug.EPrint(err)
 		os.Exit(1)

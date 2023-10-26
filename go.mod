@@ -1,5 +1,10 @@
 module goarrg.com/examples
 
-go 1.16
+go 1.21
 
-require goarrg.com v0.0.0-20210716222135-81c97b6fd80b
+require goarrg.com v0.0.0-20231025134844-bf6045fe96c6
+
+require (
+	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
+	golang.org/x/sys v0.13.0 // indirect
+)
