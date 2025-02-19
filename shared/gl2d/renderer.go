@@ -1,5 +1,5 @@
-//go:build !disable_gl
-// +build !disable_gl
+//go:build !goarrg_disable_gl
+// +build !goarrg_disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -82,7 +82,7 @@ func (r *gl2d) GLConfig() goarrg.GLConfig {
 }
 
 // window and gl instance was created so now time to init the renderer
-func (r *gl2d) GLInit(glInstance goarrg.GLInstance) error {
+func (r *gl2d) GLInit(_ goarrg.PlatformInterface, glInstance goarrg.GLInstance) error {
 	C.glClearColor(0, 0, 0, 1)
 	C.glEnable(C.GL_BLEND)
 	C.glBlendFunc(C.GL_SRC_ALPHA, C.GL_ONE_MINUS_SRC_ALPHA)

@@ -40,7 +40,7 @@ func TestExamples(t *testing.T) {
 	debug.IPrintf("Env:\n%s", toolchain.EnvString())
 
 	goarrg.Install(
-		goarrg.Config{
+		goarrg.Dependencies{
 			Target:    target,
 			SDL:       goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
 			VkHeaders: goarrg.VkHeadersConfig{Install: true},
@@ -64,7 +64,6 @@ func TestExamples(t *testing.T) {
 	defer os.RemoveAll(tmpDir)
 
 	for _, f := range files {
-		f := f
 		if f.IsDir() {
 			switch {
 			case f.Name() == "shared":

@@ -1,5 +1,5 @@
-//go:build !disable_vk && amd64
-// +build !disable_vk,amd64
+//go:build !goarrg_disable_vk
+// +build !goarrg_disable_vk
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -19,9 +19,11 @@ limitations under the License.
 
 package main
 
+import "goarrg.com"
+
 type program struct{}
 
-func (p *program) Init() error {
+func (p *program) Init(goarrg.PlatformInterface) error {
 	return nil
 }
 

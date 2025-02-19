@@ -1,4 +1,5 @@
-//+build !disable_gl
+//go:build !goarrg_disable_gl
+// +build !goarrg_disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -62,7 +63,7 @@ func (a *audioMixer) AudioConfig() goarrg.AudioConfig {
 	}
 }
 
-func (a *audioMixer) Init(cfg goarrg.AudioConfig) error {
+func (a *audioMixer) Init(_ goarrg.PlatformInterface, cfg goarrg.AudioConfig) error {
 	a.spec = cfg.Spec
 
 	s, err := audio.Load(Mixer.musicFile)

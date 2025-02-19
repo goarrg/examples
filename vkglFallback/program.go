@@ -1,4 +1,5 @@
-//+build !disable_gl,!disable_vk,amd64
+//go:build !goarrg_disable_gl && !goarrg_disable_vk
+// +build !goarrg_disable_gl,!goarrg_disable_vk
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -21,6 +22,7 @@ package main
 import (
 	"os"
 
+	"goarrg.com"
 	"goarrg.com/debug"
 	"goarrg.com/examples/shared/gl2d"
 )
@@ -29,9 +31,8 @@ type program struct {
 	sprite gl2d.Sprite
 }
 
-func (p *program) Init() error {
+func (p *program) Init(goarrg.PlatformInterface) error {
 	s, err := gl2d.SpriteLoad("test.png")
-
 	if err != nil {
 		debug.EPrint(err)
 		os.Exit(1)

@@ -1,4 +1,5 @@
-//+build !disable_gl
+//go:build !goarrg_disable_gl
+// +build !goarrg_disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -22,6 +23,7 @@ import (
 	"os"
 	"time"
 
+	"goarrg.com"
 	"goarrg.com/debug"
 )
 
@@ -29,7 +31,7 @@ type program struct {
 	timer *time.Timer
 }
 
-func (p *program) Init() error {
+func (p *program) Init(goarrg.PlatformInterface) error {
 	p.timer = time.NewTimer(time.Millisecond * 500)
 
 	return nil
@@ -39,7 +41,6 @@ func (p *program) Update(deltaTime float64) {
 	select {
 	case <-p.timer.C:
 		err := PlaySound("test2.wav")
-
 		if err != nil {
 			debug.EPrint(err)
 			os.Exit(1)

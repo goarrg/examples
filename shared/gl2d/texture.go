@@ -1,5 +1,5 @@
-//go:build !disable_gl
-// +build !disable_gl
+//go:build !goarrg_disable_gl
+// +build !goarrg_disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -42,7 +42,7 @@ type texture struct {
 	refs       *int64
 	id         C.GLuint
 	filename   string
-	resolution gmath.Vector3i
+	resolution gmath.Vector3int
 }
 
 func textureLoad(file string) (*texture, error) {
@@ -86,7 +86,7 @@ func textureLoad(file string) (*texture, error) {
 	t := texture{
 		refs:     new(int64),
 		filename: a.Name(),
-		resolution: gmath.Vector3i{
+		resolution: gmath.Vector3int{
 			X: img.Bounds().Dx(),
 			Y: img.Bounds().Dy(),
 		},
