@@ -35,7 +35,7 @@ var (
 
 func (r *renderer) VkConfig() goarrg.VkConfig {
 	return goarrg.VkConfig{
-		API:        (((1) << 22) | ((1) << 12) | (0)),
+		API:        ((1) << 22) | ((1) << 12),
 		Layers:     []string{},
 		Extensions: []string{"VK_EXT_debug_utils"},
 	}
