@@ -28,6 +28,7 @@ import (
 
 	"goarrg.com/debug"
 	goarrg "goarrg.com/make"
+	vxr "goarrg.com/rhi/vxr/make"
 	"goarrg.com/toolchain"
 	"goarrg.com/toolchain/cgodep"
 	"goarrg.com/toolchain/golang"
@@ -46,6 +47,10 @@ func TestExamples(t *testing.T) {
 			VkHeaders: goarrg.VkHeadersConfig{Install: true},
 		},
 	)
+
+	if enableVK {
+		vxr.Install(target, toolchain.BuildRelease)
+	}
 
 	if golang.ShouldCleanCache() {
 		golang.CleanCache()
@@ -74,7 +79,7 @@ func TestExamples(t *testing.T) {
 			}
 
 			t.Run(f.Name(), func(t *testing.T) {
-				if strings.HasPrefix(f.Name(), "vk") && !enableVK {
+				if (strings.HasPrefix(f.Name(), "vk") || strings.HasPrefix(f.Name(), "vxr")) && !enableVK {
 					t.Skip("Vulkan disabled, skipping", f.Name())
 				}
 				if strings.HasPrefix(f.Name(), "gl") && !enableGL {

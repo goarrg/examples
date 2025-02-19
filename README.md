@@ -2,7 +2,7 @@
 Currently this repo holds examples on component development for goarrg.com.
 There are OpenGL and Vulkan hello world examples, a Vulkan fallback to OpenGL example, and an audio example.
 
-Currently the examples support running on Ubuntu or Windows, 386 or amd64. However the Vulkan examples require amd64.
+Currently the examples support running on Ubuntu or Windows, 386 or amd64. However the Vulkan examples may only run on amd64.
 ## Dependencies
 ### Global
 | OS | Dependencies |
@@ -18,8 +18,10 @@ Currently the examples support running on Ubuntu or Windows, 386 or amd64. Howev
 
 **For `vkgl` prefix, you need both vk and gl dependencies.**
 
+**For `vxr` prefix, all dependencies are automatically installed but you still need Vulkan drivers to run.**
+
 ## Setup
 Once all the dependencies are installed, assuming the current directory is the examples repo, you just need to:
 <pre><code>go test -count=1 -v .</code></pre>
 
-To disable vulkan/opengl tests pass the `-tags=disable_vk` or `-tags=disable_gl` arg respectively.
+To disable vulkan/opengl tests pass the `-tags=goarrg_disable_vk` or `-tags=goarrg_disable_gl` arg respectively.
