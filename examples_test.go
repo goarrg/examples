@@ -116,23 +116,25 @@ func TestExamples(t *testing.T) {
 					t.Fatal(err)
 				}
 
-				go func() {
-					s := bufio.NewScanner(stderr)
-					for s.Scan() {
-						if strings.Contains(s.Text(), "Engine Init took") {
-							// send quit signal but keep the scanner flushing to capture output
-							go func() {
-								time.Sleep(time.Second)
-								err := sigInterrupt(cmd.Process)
-								if err != nil {
-									t.Fatal(err)
-								}
-							}()
-						}
-						fmt.Fprintln(os.Stderr, s.Text())
+				errc := make(chan error, 1)
+				s := bufio.NewScanner(stderr)
+				for s.Scan() {
+					if strings.Contains(s.Text(), "Engine Init took") {
+						// send quit signal but keep the scanner flushing to capture output
+						go func() {
+							defer close(errc)
+							time.Sleep(time.Second)
+							err := sigInterrupt(cmd.Process)
+							if err != nil {
+								errc <- err
+							}
+						}()
 					}
-				}()
-
+					fmt.Fprintln(os.Stderr, s.Text())
+				}
+				if err := <-errc; err != nil {
+					t.Fatal(err)
+				}
 				if err := cmd.Wait(); err != nil {
 					t.Fatal(err)
 				}
