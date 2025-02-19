@@ -1,5 +1,5 @@
-//go:build !disable_gl
-// +build !disable_gl
+//go:build !goarrg_disable_gl
+// +build !goarrg_disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -35,7 +35,7 @@ import (
 type Sprite struct {
 	texture *texture
 	Pos     gmath.Rectf64
-	Clip    gmath.Recti
+	Clip    gmath.Rectint
 	Color   [4]float32
 }
 
@@ -52,7 +52,7 @@ func SpriteLoad(file string) (Sprite, error) {
 			W: float64(t.resolution.X),
 			H: float64(t.resolution.Y),
 		},
-		Clip: gmath.Recti{
+		Clip: gmath.Rectint{
 			W: t.resolution.X,
 			H: t.resolution.Y,
 		},
@@ -71,8 +71,8 @@ func (s *Sprite) SetTexture(file string) error {
 
 	s.texture = t
 
-	if s.Clip == (gmath.Recti{}) {
-		s.Clip = gmath.Recti{
+	if s.Clip == (gmath.Rectint{}) {
+		s.Clip = gmath.Rectint{
 			W: t.resolution.X,
 			H: t.resolution.Y,
 		}
@@ -87,7 +87,7 @@ func (s *Sprite) SetTexture(file string) error {
 	return nil
 }
 
-func (s *Sprite) GetResolution() gmath.Vector3i {
+func (s *Sprite) GetResolution() gmath.Vector3int {
 	return s.texture.resolution
 }
 

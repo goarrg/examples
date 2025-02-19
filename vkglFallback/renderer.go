@@ -1,4 +1,5 @@
-//+build !disable_gl,!disable_vk,amd64
+//go:build !goarrg_disable_gl && !goarrg_disable_vk
+// +build !goarrg_disable_gl,!goarrg_disable_vk
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -44,12 +45,12 @@ func (r *renderer) GLConfig() goarrg.GLConfig {
 	return r.gl2d.GLConfig()
 }
 
-func (r *renderer) VkInit(vkInstance goarrg.VkInstance) error {
+func (r *renderer) VkInit(_ goarrg.PlatformInterface, vkInstance goarrg.VkInstance) error {
 	return debug.Errorf("Test GL fallback")
 }
 
-func (r *renderer) GLInit(vkInstance goarrg.GLInstance) error {
-	return r.gl2d.GLInit(vkInstance)
+func (r *renderer) GLInit(p goarrg.PlatformInterface, vkInstance goarrg.GLInstance) error {
+	return r.gl2d.GLInit(p, vkInstance)
 }
 
 func (r *renderer) Update() {

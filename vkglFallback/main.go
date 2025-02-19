@@ -1,4 +1,5 @@
-//+build !disable_gl,!disable_vk,amd64
+//go:build !goarrg_disable_gl && !goarrg_disable_vk
+// +build !goarrg_disable_gl,!goarrg_disable_vk
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -22,11 +23,10 @@ package main
 	#cgo pkg-config: --static sdl2
 */
 import "C"
+
 import (
 	_ "image/png"
-	"math/rand"
 	"os"
-	"time"
 
 	"goarrg.com/examples/shared/gl2d"
 
@@ -36,18 +36,13 @@ import (
 	"goarrg.com/platform/sdl"
 )
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
 func main() {
-	//debug.LogSetLevel(debug.LogLevelError)
+	// debug.LogSetLevel(debug.LogLevelError)
 	err := sdl.Setup(sdl.Config{
 		Window: sdl.WindowConfig{
-			Rect: gmath.Recti{X: -1, Y: -1, W: 800, H: 600},
+			Rect: gmath.Rectint{X: -1, Y: -1, W: 800, H: 600},
 		},
 	})
-
 	if err != nil {
 		debug.EPrint(err)
 		os.Exit(1)
@@ -59,7 +54,6 @@ func main() {
 		Renderer: &renderer{gl2d.Renderer},
 		Program:  &program{},
 	})
-
 	if err != nil {
 		debug.EPrint(err)
 		os.Exit(1)

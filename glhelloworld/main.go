@@ -1,4 +1,5 @@
-//+build !disable_gl
+//go:build !goarrg_disable_gl
+// +build !goarrg_disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -22,11 +23,10 @@ package main
 	#cgo pkg-config: --static sdl2
 */
 import "C"
+
 import (
 	_ "image/png"
-	"math/rand"
 	"os"
-	"time"
 
 	"goarrg.com"
 	"goarrg.com/debug"
@@ -34,11 +34,6 @@ import (
 	"goarrg.com/gmath"
 	"goarrg.com/platform/sdl"
 )
-
-func init() {
-	// seed random number generator
-	rand.Seed(time.Now().UnixNano())
-}
 
 func main() {
 	// uncomment to change log level
@@ -48,10 +43,9 @@ func main() {
 	err := sdl.Setup(sdl.Config{
 		// configure window size and position
 		Window: sdl.WindowConfig{
-			Rect: gmath.Recti{X: -1, Y: -1, W: 800, H: 600},
+			Rect: gmath.Rectint{X: -1, Y: -1, W: 800, H: 600},
 		},
 	})
-
 	// if error, exit
 	if err != nil {
 		debug.EPrint(err)
@@ -65,7 +59,6 @@ func main() {
 		Renderer: gl2d.Renderer, // renderer selection
 		Program:  &program{},    // program (game logic) selection
 	})
-
 	// if error, exit
 	if err != nil {
 		debug.EPrint(err)

@@ -1,4 +1,5 @@
-//+build !disable_gl
+//go:build !goarrg_disable_gl
+// +build !goarrg_disable_gl
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -21,6 +22,7 @@ package main
 import (
 	"os"
 
+	"goarrg.com"
 	"goarrg.com/debug"
 	"goarrg.com/examples/shared/gl2d"
 	"goarrg.com/input"
@@ -31,10 +33,9 @@ type program struct {
 }
 
 // Init is called only once, engine will exit if error
-func (p *program) Init() error {
+func (p *program) Init(goarrg.PlatformInterface) error {
 	// loads a sprite
 	s, err := gl2d.SpriteLoad("test.png")
-
 	// if error exit
 	if err != nil {
 		debug.EPrint(err)
@@ -46,8 +47,8 @@ func (p *program) Init() error {
 }
 
 /*
-	Update is called every frame, deltaTime is time between frames as reported
-	by the renderer.
+Update is called every frame, deltaTime is time between frames as reported
+by the renderer.
 */
 func (p *program) Update(deltaTime float64) {
 	// gets the mouse device
@@ -63,10 +64,10 @@ func (p *program) Update(deltaTime float64) {
 }
 
 /*
-	Shutdown is called when goarrg.Shutdown() was signaled and after the
-	main loop has finished. Returning false will cancel the shutdown unless
-	a SIGINT was received then Shutdown() will not be called and will not be able
-	to avoid termination.
+Shutdown is called when goarrg.Shutdown() was signaled and after the
+main loop has finished. Returning false will cancel the shutdown unless
+a SIGINT was received then Shutdown() will not be called and will not be able
+to avoid termination.
 */
 func (p *program) Shutdown() bool {
 	return true

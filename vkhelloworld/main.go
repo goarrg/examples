@@ -1,5 +1,5 @@
-//go:build !disable_vk && amd64
-// +build !disable_vk,amd64
+//go:build !goarrg_disable_vk
+// +build !goarrg_disable_vk
 
 /*
 Copyright 2020 The goARRG Authors.
@@ -20,9 +20,7 @@ limitations under the License.
 package main
 
 import (
-	"math/rand"
 	"os"
-	"time"
 
 	"goarrg.com"
 	"goarrg.com/debug"
@@ -30,15 +28,11 @@ import (
 	"goarrg.com/platform/sdl"
 )
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
-
 func main() {
 	// debug.LogSetLevel(debug.LogLevelError)
 	err := sdl.Setup(sdl.Config{
 		Window: sdl.WindowConfig{
-			Rect: gmath.Recti{X: -1, Y: -1, W: 800, H: 600},
+			Rect: gmath.Rectint{X: -1, Y: -1, W: 800, H: 600},
 		},
 	})
 	if err != nil {
@@ -52,7 +46,6 @@ func main() {
 		Renderer: &renderer{},
 		Program:  &program{},
 	})
-
 	if err != nil {
 		debug.EPrint(err)
 		os.Exit(1)

@@ -26,7 +26,7 @@ package main
 	#include "renderer.h"
 
 	static inline void vkInitPlatform(renderer * r, uintptr_t instance,
-									  uintptr_t surface, uintptr_t procAddr) {
+									  uint64_t surface, uintptr_t procAddr) {
 		r->instance = (VkInstance)instance;
 		r->surface = (VkSurfaceKHR)surface;
 		r->procAddr = (PFN_vkGetInstanceProcAddr)procAddr;
@@ -51,10 +51,14 @@ func (r *renderer) VkConfig() goarrg.VkConfig {
 	}
 }
 
-func (r *renderer) VkInit(vkInstance goarrg.VkInstance) error {
+func (r *renderer) VkInit(_ goarrg.PlatformInterface, vkInstance goarrg.VkInstance) error {
+	s, err := vkInstance.CreateSurface()
+	if err != nil {
+		return debug.ErrorWrapf(err, "Failed to create surface")
+	}
 	C.vkInitPlatform(&r.cRenderer,
 		C.uintptr_t(vkInstance.Uintptr()),
-		C.uintptr_t(vkInstance.Surface()),
+		C.uint64_t(s),
 		C.uintptr_t(vkInstance.ProcAddr()),
 	)
 
