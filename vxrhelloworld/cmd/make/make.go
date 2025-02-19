@@ -37,8 +37,9 @@ func main() {
 
 	goarrg.Install(
 		goarrg.Dependencies{
-			Target: target,
-			SDL:    goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
+			Target:    target,
+			SDL:       goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
+			VkHeaders: goarrg.VkHeadersConfig{Install: true},
 		},
 	)
 	vxr.Install(target, toolchain.BuildRelease)
