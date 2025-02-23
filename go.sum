@@ -1,7 +1,7 @@
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
-goarrg.com v0.0.0-20250219110414-440a8fea5eb3 h1:YlsIRd6O1QC1oG2+dwUm0z1ycid/b2woJZkw6GG5ZV8=
-goarrg.com v0.0.0-20250219110414-440a8fea5eb3/go.mod h1:XTj9pMmnqnzxqVMzuSO5rp3kTHm3/zIZfM1PM75tkyM=
+goarrg.com v0.0.0-20250223093750-d90f5f7c84ab h1:ionVr/3oUm73t2HyYCUZD/Vluz5onb51gE3iXJVdGpo=
+goarrg.com v0.0.0-20250223093750-d90f5f7c84ab/go.mod h1:XTj9pMmnqnzxqVMzuSO5rp3kTHm3/zIZfM1PM75tkyM=
 goarrg.com/rhi/vxr v0.0.0-20250219133951-6751097e3509 h1:v1cdi5cXocd9feJw3nIvzF9seOnbUXv3NTAKOhjP1/U=
 goarrg.com/rhi/vxr v0.0.0-20250219133951-6751097e3509/go.mod h1:tISuPNNJ7MQHinLZ4mE2XQWwEGdrZ6jaQCN1EFfjBuY=
 golang.org/x/crypto v0.33.0 h1:IOBPskki6Lysi0lo9qQvbxiQ+FvsCC/YWOecCHAixus=

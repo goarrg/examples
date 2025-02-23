@@ -35,11 +35,13 @@ func main() {
 	golang.Setup(golang.Config{Target: target})
 	debug.IPrintf("Env:\n%s", toolchain.EnvString())
 
-	goarrg.Install(
-		goarrg.Dependencies{
-			Target:    target,
-			SDL:       goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
-			VkHeaders: goarrg.VkHeadersConfig{Install: true},
+	buildTags := goarrg.Install(
+		goarrg.Config{
+			Target: target,
+			Dependencies: goarrg.Dependencies{
+				SDL:       goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
+				VkHeaders: goarrg.VkHeadersConfig{Install: true},
+			},
 		},
 	)
 	vxr.Install(target, toolchain.BuildRelease)
@@ -48,7 +50,7 @@ func main() {
 		golang.CleanCache()
 	}
 
-	if err := toolchain.Run("go", "build", filepath.Join(golang.CallersPackage(packages.NeedFiles).Dir, "..", "..")); err != nil {
+	if err := toolchain.Run("go", "build", "-tags="+buildTags, filepath.Join(golang.CallersPackage(packages.NeedFiles).Dir, "..", "..")); err != nil {
 		panic(err)
 	}
 }

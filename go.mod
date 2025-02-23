@@ -3,7 +3,7 @@ module goarrg.com/examples
 go 1.23.0
 
 require (
-	goarrg.com v0.0.0-20250219110414-440a8fea5eb3
+	goarrg.com v0.0.0-20250223093750-d90f5f7c84ab
 	goarrg.com/rhi/vxr v0.0.0-20250219133951-6751097e3509
 	golang.org/x/tools v0.30.0
 )

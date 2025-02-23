@@ -40,11 +40,22 @@ func TestExamples(t *testing.T) {
 	golang.Setup(golang.Config{Target: target})
 	debug.IPrintf("Env:\n%s", toolchain.EnvString())
 
-	goarrg.Install(
-		goarrg.Dependencies{
-			Target:    target,
-			SDL:       goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
-			VkHeaders: goarrg.VkHeadersConfig{Install: true},
+	buildOptions := goarrg.BuildOptions{}
+
+	if enableDebug {
+		buildOptions.Build = toolchain.BuildDebug
+	} else {
+		buildOptions.Build = toolchain.BuildRelease
+	}
+
+	buildTags := goarrg.Install(
+		goarrg.Config{
+			Target: target,
+			Dependencies: goarrg.Dependencies{
+				SDL:       goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
+				VkHeaders: goarrg.VkHeadersConfig{Install: true},
+			},
+			BuildOptions: buildOptions,
 		},
 	)
 
@@ -97,12 +108,7 @@ func TestExamples(t *testing.T) {
 
 				// build
 				{
-					args := []string{"build", "-o=" + filename}
-
-					if enableDebug {
-						args = append(args, "-tags=debug")
-					}
-
+					args := []string{"build", "-tags=" + buildTags, "-o=" + filename}
 					if err := toolchain.RunDir(f.Name(), "go", args...); err != nil {
 						t.Fatal(err)
 					}
