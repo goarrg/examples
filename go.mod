@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	goarrg.com v0.0.0-20250223093750-d90f5f7c84ab
-	goarrg.com/rhi/vxr v0.0.0-20250219133951-6751097e3509
+	goarrg.com/rhi/vxr v0.0.0-20250308203827-e9946e66ffa7
 	golang.org/x/tools v0.30.0
 )
 
