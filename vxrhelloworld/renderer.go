@@ -45,7 +45,8 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 	// Do not actually use golang.CallersPackage in shipping programs, this will give you the dir of the
 	// sources at the time the program was built
 	filesystem := asset.DirFS(filepath.Join(golang.CallersPackage(packages.NeedFiles).Dir, "./shaders"))
-	vxr.Init(platform, vkInstance, vxr.Config{
+	vxr.InitInstance(platform, vkInstance)
+	vxr.InitDevice(vxr.Config{
 		MaxFramesInFlight:      2,
 		DescriptorPoolBankSize: 1,
 	})
