@@ -1,6 +1,9 @@
 //go:build !goarrg_disable_vk
 // +build !goarrg_disable_vk
 
+//go:generate go run goarrg.com/rhi/vxr/cmd/vxrc -dir=./shaders -generator=go -skip-metadata main.vert
+//go:generate go run goarrg.com/rhi/vxr/cmd/vxrc -dir=./shaders -generator=go -skip-metadata main.frag
+
 /*
 Copyright 2025 The goARRG Authors.
 
@@ -20,15 +23,11 @@ limitations under the License.
 package main
 
 import (
-	"path/filepath"
 	"time"
 
 	"goarrg.com"
-	"goarrg.com/asset"
 	"goarrg.com/gmath"
 	"goarrg.com/rhi/vxr"
-	"goarrg.com/toolchain/golang"
-	"golang.org/x/tools/go/packages"
 )
 
 type renderer struct {
@@ -42,9 +41,6 @@ func (r *renderer) VkConfig() goarrg.VkConfig {
 }
 
 func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.VkInstance) error {
-	// Do not actually use golang.CallersPackage in shipping programs, this will give you the dir of the
-	// sources at the time the program was built
-	filesystem := asset.DirFS(filepath.Join(golang.CallersPackage(packages.NeedFiles).Dir, "./shaders"))
 	vxr.InitInstance(platform, vkInstance)
 	vxr.InitDevice(vxr.Config{
 		MaxFramesInFlight:      2,
@@ -55,8 +51,8 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 		Topology: vxr.VertexTopologyTriangleList,
 	})
 
-	vs, vl, _ := vxr.CompileShader(filesystem, "main.vert")
-	fs, fl, _ := vxr.CompileShader(filesystem, "main.frag")
+	vs, vl := vxrcLoad_main_vert()
+	fs, fl := vxrcLoad_main_frag()
 	r.triangleLayout = vxr.NewPipelineLayout(
 		vxr.PipelineLayoutCreateInfo{
 			ShaderLayout: vl, ShaderStage: vxr.ShaderStageVertex,

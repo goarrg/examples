@@ -17,6 +17,8 @@ limitations under the License.
 package main
 
 import (
+	"fmt"
+	"os"
 	"path/filepath"
 	"runtime"
 
@@ -44,13 +46,45 @@ func main() {
 			},
 		},
 	)
-	vxr.Install(target, toolchain.BuildRelease)
-
-	if golang.ShouldCleanCache() {
-		golang.CleanCache()
+	if buildTags != "" {
+		buildTags += ","
 	}
 
-	if err := toolchain.Run("go", "build", "-tags="+buildTags, filepath.Join(golang.CallersPackage(packages.NeedFiles).Dir, "..", "..")); err != nil {
-		panic(err)
+	if len(os.Args) == 1 {
+		buildTags += vxr.Install(vxr.Config{
+			Target: target,
+			BuildOptions: vxr.BuildOptions{
+				Build: toolchain.BuildRelease,
+				Disable: vxr.DisableFeatures{
+					ShaderCompiler: true,
+				},
+			},
+		})
+
+		if golang.ShouldCleanCache() {
+			golang.CleanCache()
+		}
+		if err := toolchain.Run("go", "build", "-tags="+buildTags, filepath.Join(golang.CallersPackage(packages.NeedFiles).Dir, "..", "..")); err != nil {
+			panic(err)
+		}
+	} else if (len(os.Args) == 2) && (os.Args[1] == "generate") {
+		// generate requires the shader compiler, duh, so we need to recompile vxr
+		// but since generate does not get called all the time and vxr compiles fast
+		// this isn't too bad
+		buildTags += vxr.Install(vxr.Config{
+			Target: target,
+			BuildOptions: vxr.BuildOptions{
+				Build: toolchain.BuildRelease,
+			},
+		})
+
+		if golang.ShouldCleanCache() {
+			golang.CleanCache()
+		}
+		if err := toolchain.Run("go", "generate", "-tags="+buildTags, filepath.Join(golang.CallersPackage(packages.NeedFiles).Dir, "..", "..")); err != nil {
+			panic(err)
+		}
+	} else {
+		panic(fmt.Sprintf("Invalid args: %q", os.Args[1:]))
 	}
 }
