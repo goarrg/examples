@@ -60,7 +60,18 @@ func TestExamples(t *testing.T) {
 	)
 
 	if enableVK {
-		vxr.Install(target, toolchain.BuildRelease)
+		if buildTags != "" {
+			buildTags += ","
+		}
+		buildTags += vxr.Install(vxr.Config{
+			Target: target,
+			BuildOptions: vxr.BuildOptions{
+				Build: toolchain.BuildRelease,
+				Disable: vxr.DisableFeatures{
+					ShaderCompiler: true,
+				},
+			},
+		})
 	}
 
 	if golang.ShouldCleanCache() {
