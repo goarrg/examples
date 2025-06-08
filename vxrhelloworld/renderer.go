@@ -98,7 +98,9 @@ func (r *renderer) Draw() float64 {
 			},
 		)
 
-		cb.RenderPassBegin("triangle", gmath.Recti32{W: frame.Surface().Extent().X, H: frame.Surface().Extent().Y},
+		cb.RenderPassBegin("triangle",
+			gmath.Recti32{W: frame.Surface().Extent().X, H: frame.Surface().Extent().Y},
+			vxr.RenderParameters{},
 			vxr.RenderAttachments{
 				Color: []vxr.RenderColorAttachment{
 					{
