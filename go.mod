@@ -3,8 +3,8 @@ module goarrg.com/examples
 go 1.23.0
 
 require (
-	goarrg.com v0.0.0-20250527073616-1c2688a5e446
-	goarrg.com/rhi/vxr v0.0.0-20250608052747-d6625f985ffb
+	goarrg.com v0.0.0-20250619121633-bc3718057d14
+	goarrg.com/rhi/vxr v0.0.0-20250619121859-a0eebb1bb14a
 	golang.org/x/tools v0.30.0
 )
 
