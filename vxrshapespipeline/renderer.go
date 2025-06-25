@@ -161,6 +161,8 @@ func (r *renderer) Resize(w int, h int) {
 func (r *renderer) Destroy() {
 	r.renderFinishedSemaphore.Wait()
 	r.renderFinishedSemaphore.Destroy()
+	r.fragShader.Destroy()
+	r.shapesPipeline.Destroy()
 	shapes.Destroy()
 	vxr.Destroy()
 }
