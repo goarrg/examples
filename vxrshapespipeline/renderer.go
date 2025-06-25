@@ -2,6 +2,7 @@
 // +build !goarrg_disable_vk
 
 //go:generate go run goarrg.com/rhi/vxr/cmd/vxrc -dir=./shaders -generator=go -skip-metadata main.frag
+//go:generate go run goarrg.com/rhi/vxr/cmd/vxrc -dir=./shaders -generator=go -skip-metadata line.frag
 
 /*
 Copyright 2025 The goARRG Authors.
@@ -34,6 +35,10 @@ type renderer struct {
 	renderFinishedSemaphore *vxr.TimelineSemaphore
 	fragShader              *vxr.GraphicsShaderPipeline
 	shapesPipeline          *shapes.Pipeline2D
+
+	lineWidth          float32
+	lineFragShader     *vxr.GraphicsShaderPipeline
+	lineShapesPipeline *shapes.Pipeline2DLine
 }
 
 func (r *renderer) VkConfig() goarrg.VkConfig {
@@ -49,13 +54,25 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 	})
 	shapes.Init(platform)
 	r.renderFinishedSemaphore = vxr.NewTimelineSemaphore("renderFinishedSemaphore")
-	fs, fl := vxrcLoad_main_frag()
-	r.fragShader = vxr.NewGraphicsShaderPipeline(vxr.NewPipelineLayout(
-		vxr.PipelineLayoutCreateInfo{
-			ShaderLayout: fl, ShaderStage: vxr.ShaderStageFragment,
-		},
-	), fs, fl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
-	r.shapesPipeline = shapes.New2DRegularNGonStarPipeline(fl, 4)
+	{
+		fs, fl := vxrcLoad_main_frag()
+		r.fragShader = vxr.NewGraphicsShaderPipeline(vxr.NewPipelineLayout(
+			vxr.PipelineLayoutCreateInfo{
+				ShaderLayout: fl, ShaderStage: vxr.ShaderStageFragment,
+			},
+		), fs, fl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
+		r.shapesPipeline = shapes.New2DRegularNGonStarPipeline(fl, 4)
+	}
+	{
+		r.lineWidth = min(8, vxr.DeviceProperties().Limits.LineWidth.Max)
+		fs, fl := vxrcLoad_line_frag()
+		r.lineFragShader = vxr.NewGraphicsShaderPipeline(vxr.NewPipelineLayout(
+			vxr.PipelineLayoutCreateInfo{
+				ShaderLayout: fl, ShaderStage: vxr.ShaderStageFragment,
+			},
+		), fs, fl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
+		r.lineShapesPipeline = shapes.New2DLinePipeline(fl)
+	}
 	return nil
 }
 
@@ -106,7 +123,8 @@ func (r *renderer) Draw() float64 {
 				},
 			})
 
-		r.shapesPipeline.Draw(frame, cb, r.fragShader, gmath.Extent2i32{X: frame.Surface().Extent().X, Y: frame.Surface().Extent().Y}, vxr.DrawParameters{},
+		viewport := gmath.Extent2i32{X: frame.Surface().Extent().X, Y: frame.Surface().Extent().Y}
+		r.shapesPipeline.Draw(frame, cb, r.fragShader, viewport, vxr.DrawParameters{},
 			shapes.InstanceData2D{
 				Transform: shapes.Transform2D{
 					Size: gmath.Vector2f32{X: 128, Y: 128},
@@ -118,6 +136,17 @@ func (r *renderer) Draw() float64 {
 					Size: gmath.Vector2f32{X: 128, Y: 128},
 				},
 				Parameter1: 0.25,
+			})
+
+		r.lineShapesPipeline.Draw(frame, cb, r.lineFragShader, viewport, vxr.DrawParameters{},
+			r.lineWidth,
+			shapes.InstanceData2DLine{
+				P0: gmath.Vector2f32{X: 64, Y: 130},
+				P1: gmath.Vector2f32{X: 208, Y: 130},
+			},
+			shapes.InstanceData2DLine{
+				P0: gmath.Vector2f32{X: 208, Y: 130 - (r.lineWidth * 0.5)},
+				P1: gmath.Vector2f32{X: 208, Y: 200},
 			})
 
 		cb.RenderPassEnd()
@@ -163,6 +192,8 @@ func (r *renderer) Destroy() {
 	r.renderFinishedSemaphore.Destroy()
 	r.fragShader.Destroy()
 	r.shapesPipeline.Destroy()
+	r.lineFragShader.Destroy()
+	r.lineShapesPipeline.Destroy()
 	shapes.Destroy()
 	vxr.Destroy()
 }
