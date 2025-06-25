@@ -1,7 +1,6 @@
 //go:build !goarrg_disable_vk
 // +build !goarrg_disable_vk
 
-//go:generate go run goarrg.com/rhi/vxr/cmd/vxrc -dir=./shaders -generator=go -skip-metadata main.vert
 //go:generate go run goarrg.com/rhi/vxr/cmd/vxrc -dir=./shaders -generator=go -skip-metadata main.frag
 
 /*
@@ -28,12 +27,13 @@ import (
 	"goarrg.com"
 	"goarrg.com/gmath"
 	"goarrg.com/rhi/vxr"
+	"goarrg.com/rhi/vxr/shapes"
 )
 
 type renderer struct {
-	triangleLayout          *vxr.PipelineLayout
-	trianglePipeline        vxr.GraphicsPipelineLibrary
 	renderFinishedSemaphore *vxr.TimelineSemaphore
+	fragShader              *vxr.GraphicsShaderPipeline
+	shapesPipeline          *shapes.Pipeline2D
 }
 
 func (r *renderer) VkConfig() goarrg.VkConfig {
@@ -43,30 +43,19 @@ func (r *renderer) VkConfig() goarrg.VkConfig {
 func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.VkInstance) error {
 	vxr.InitInstance(platform, vkInstance)
 	vxr.InitDevice(vxr.Config{
+		RequiredFeatures:       shapes.RequiredVkFeatureStructs(),
 		MaxFramesInFlight:      2,
 		DescriptorPoolBankSize: 1,
 	})
-
-	vi := vxr.NewVertexInputPipeline(vxr.VertexInputPipelineCreateInfo{
-		Topology: vxr.VertexTopologyTriangleList,
-	})
-
-	vs, vl := vxrcLoad_main_vert()
+	shapes.Init(platform)
+	r.renderFinishedSemaphore = vxr.NewTimelineSemaphore("renderFinishedSemaphore")
 	fs, fl := vxrcLoad_main_frag()
-	r.triangleLayout = vxr.NewPipelineLayout(
-		vxr.PipelineLayoutCreateInfo{
-			ShaderLayout: vl, ShaderStage: vxr.ShaderStageVertex,
-		},
+	r.fragShader = vxr.NewGraphicsShaderPipeline(vxr.NewPipelineLayout(
 		vxr.PipelineLayoutCreateInfo{
 			ShaderLayout: fl, ShaderStage: vxr.ShaderStageFragment,
 		},
-	)
-	vp := vxr.NewGraphicsShaderPipeline(r.triangleLayout, vs, vl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
-	fp := vxr.NewGraphicsShaderPipeline(r.triangleLayout, fs, fl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
-	r.trianglePipeline = vxr.GraphicsPipelineLibrary{
-		Layout: r.triangleLayout, VertexInput: vi, VertexShader: vp, FragmentShader: fp,
-	}
-	r.renderFinishedSemaphore = vxr.NewTimelineSemaphore("renderFinishedSemaphore")
+	), fs, fl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
+	r.shapesPipeline = shapes.New2DRegularNGonStarPipeline(fl, 4)
 	return nil
 }
 
@@ -98,9 +87,9 @@ func (r *renderer) Draw() float64 {
 			},
 		)
 
-		cb.RenderPassBegin("triangle",
+		cb.RenderPassBegin("main",
 			gmath.Recti32{W: frame.Surface().Extent().X, H: frame.Surface().Extent().Y},
-			vxr.RenderParameters{},
+			vxr.RenderParameters{FlipViewport: true},
 			vxr.RenderAttachments{
 				Color: []vxr.RenderColorAttachment{
 					{
@@ -117,10 +106,19 @@ func (r *renderer) Draw() float64 {
 				},
 			})
 
-		cb.Draw(r.trianglePipeline, vxr.DrawInfo{
-			VertexCount:   3,
-			InstanceCount: 1,
-		})
+		r.shapesPipeline.Draw(frame, cb, r.fragShader, gmath.Extent2i32{X: frame.Surface().Extent().X, Y: frame.Surface().Extent().Y}, vxr.DrawParameters{},
+			shapes.InstanceData2D{
+				Transform: shapes.Transform2D{
+					Size: gmath.Vector2f32{X: 128, Y: 128},
+				},
+				Parameter1: 0.5,
+			}, shapes.InstanceData2D{
+				Transform: shapes.Transform2D{
+					Pos:  gmath.Point2f32{X: 140},
+					Size: gmath.Vector2f32{X: 128, Y: 128},
+				},
+				Parameter1: 0.25,
+			})
 
 		cb.RenderPassEnd()
 
@@ -161,6 +159,8 @@ func (r *renderer) Resize(w int, h int) {
 }
 
 func (r *renderer) Destroy() {
+	r.renderFinishedSemaphore.Wait()
 	r.renderFinishedSemaphore.Destroy()
+	shapes.Destroy()
 	vxr.Destroy()
 }
