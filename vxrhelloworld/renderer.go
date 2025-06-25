@@ -162,5 +162,7 @@ func (r *renderer) Resize(w int, h int) {
 
 func (r *renderer) Destroy() {
 	r.renderFinishedSemaphore.Destroy()
+	r.trianglePipeline.VertexShader.Destroy()
+	r.trianglePipeline.FragmentShader.Destroy()
 	vxr.Destroy()
 }
