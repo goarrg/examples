@@ -61,7 +61,7 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 				ShaderLayout: fl, ShaderStage: vxr.ShaderStageFragment,
 			},
 		), fs, fl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
-		r.shapesPipeline = shapes.New2DRegularNGonStarPipeline(fl, 4)
+		r.shapesPipeline = shapes.NewPipeline2DRegularNGonStar(fl, 4)
 	}
 	{
 		r.lineWidth = min(8, vxr.DeviceProperties().Limits.LineWidth.Max)
@@ -71,7 +71,7 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 				ShaderLayout: fl, ShaderStage: vxr.ShaderStageFragment,
 			},
 		), fs, fl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
-		r.lineShapesPipeline = shapes.New2DLinePipeline(fl)
+		r.lineShapesPipeline = shapes.NewPipeline2DLine(fl)
 	}
 	return nil
 }
