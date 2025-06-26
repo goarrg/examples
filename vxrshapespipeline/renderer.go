@@ -23,6 +23,7 @@ limitations under the License.
 package main
 
 import (
+	"math"
 	"time"
 
 	"goarrg.com"
@@ -36,9 +37,10 @@ type renderer struct {
 	fragShader              *vxr.GraphicsShaderPipeline
 	shapesPipeline          *shapes.Pipeline2D
 
-	lineWidth          float32
-	lineFragShader     *vxr.GraphicsShaderPipeline
-	lineShapesPipeline *shapes.Pipeline2DLine
+	lineWidth               float32
+	lineFragShader          *vxr.GraphicsShaderPipeline
+	lineShapesPipeline      *shapes.Pipeline2DLine
+	lineStripShapesPipeline *shapes.Pipeline2DLineStrip
 }
 
 func (r *renderer) VkConfig() goarrg.VkConfig {
@@ -72,6 +74,7 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 			},
 		), fs, fl.EntryPoints["main"], vxr.GraphicsShaderPipelineCreateInfo{})
 		r.lineShapesPipeline = shapes.NewPipeline2DLine(fl)
+		r.lineStripShapesPipeline = shapes.NewPipeline2DLineStrip(fl)
 	}
 	return nil
 }
@@ -149,6 +152,16 @@ func (r *renderer) Draw() float64 {
 				P1: gmath.Vector2f32{X: 208, Y: 200},
 			})
 
+		{
+			var points []gmath.Vector2f32
+			for x := 0.0; x < 64.0; x++ {
+				t := 2 * math.Pi * (x / 64)
+				points = append(points, gmath.Vector2f32{X: float32(x) * 4, Y: 240 + float32(math.Sin(t)*32)})
+			}
+			r.lineStripShapesPipeline.Draw(frame, cb, r.lineFragShader, viewport, vxr.DrawParameters{},
+				8, points...)
+		}
+
 		cb.RenderPassEnd()
 
 		cb.ImageBarrier(
@@ -194,6 +207,7 @@ func (r *renderer) Destroy() {
 	r.shapesPipeline.Destroy()
 	r.lineFragShader.Destroy()
 	r.lineShapesPipeline.Destroy()
+	r.lineStripShapesPipeline.Destroy()
 	shapes.Destroy()
 	vxr.Destroy()
 }
