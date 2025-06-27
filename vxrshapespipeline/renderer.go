@@ -43,8 +43,10 @@ import (
 
 type renderer struct {
 	renderFinishedSemaphore *vxr.TimelineSemaphore
-	fragShader              *vxr.GraphicsShaderPipeline
-	shapesPipeline          *shapes.Pipeline2D
+	multisampledImage       *vxr.DeviceColorImageMultiSampled
+
+	fragShader     *vxr.GraphicsShaderPipeline
+	shapesPipeline *shapes.Pipeline2D
 
 	lineWidth               float32
 	lineFragShader          *vxr.GraphicsShaderPipeline
@@ -237,6 +239,20 @@ func (r *renderer) Draw() float64 {
 				},
 				Range: vxr.ImageSubresourceRange{BaseMipLevel: 0, NumMipLevels: 1, BaseArrayLayer: 0, NumArrayLayers: 1},
 			},
+			vxr.ImageBarrier{
+				Image: r.multisampledImage,
+				Src: vxr.ImageBarrierInfo{
+					Stage:  vxr.PipelineStageRenderAttachmentWrite,
+					Access: vxr.AccessFlagMemoryWrite,
+					Layout: vxr.ImageLayoutUndefined,
+				},
+				Dst: vxr.ImageBarrierInfo{
+					Stage:  vxr.PipelineStageRenderAttachmentWrite,
+					Access: vxr.AccessFlagMemoryWrite,
+					Layout: vxr.ImageLayoutAttachmentOptimal,
+				},
+				Range: vxr.ImageSubresourceRange{BaseMipLevel: 0, NumMipLevels: 1, BaseArrayLayer: 0, NumArrayLayers: 1},
+			},
 		)
 
 		cb.RenderPassBegin("main",
@@ -245,10 +261,12 @@ func (r *renderer) Draw() float64 {
 			vxr.RenderAttachments{
 				Color: []vxr.RenderColorAttachment{
 					{
-						Image:   frame.Surface(),
-						Layout:  vxr.ImageLayoutAttachmentOptimal,
-						LoadOp:  vxr.RenderAttachmentLoadOpClear,
-						StoreOp: vxr.RenderAttachmentStoreOpStore,
+						Image:             frame.Surface(),
+						ImageMultiSampled: r.multisampledImage,
+						RenderResolveMode: vxr.RenderResolveModeAverage,
+						Layout:            vxr.ImageLayoutAttachmentOptimal,
+						LoadOp:            vxr.RenderAttachmentLoadOpClear,
+						StoreOp:           vxr.RenderAttachmentStoreOpStore,
 						ColorBlend: vxr.RenderColorBlendParameters{
 							Enable:         true,
 							Equation:       vxr.RenderColorAttachmentBlendPremultipliedAlpha(),
@@ -341,11 +359,20 @@ func (r *renderer) Draw() float64 {
 
 func (r *renderer) Resize(w int, h int) {
 	vxr.Resize(w, h)
+	info := vxr.CurrentSurfaceInfo()
+	r.multisampledImage.Destroy()
+	r.multisampledImage = vxr.NewColorImageMultiSampled("main", info.Format, vxr.ImageMultiSampledCreateInfo{
+		Usage:   vxr.ImageUsageColorAttachment,
+		Samples: vxr.SampleCount8,
+		Extent:  gmath.Extent2i32{X: info.Extent.X, Y: info.Extent.Y},
+	})
 }
 
 func (r *renderer) Destroy() {
 	r.renderFinishedSemaphore.Wait()
 	r.renderFinishedSemaphore.Destroy()
+
+	r.multisampledImage.Destroy()
 
 	r.fragShader.Destroy()
 	r.shapesPipeline.Destroy()
