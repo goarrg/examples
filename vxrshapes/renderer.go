@@ -47,7 +47,7 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 		MaxFramesInFlight:      2,
 		DescriptorPoolBankSize: 1,
 	})
-	shapes.Init(platform)
+	shapes.Init(shapes.Config{})
 	r.renderFinishedSemaphore = vxr.NewTimelineSemaphore("renderFinishedSemaphore")
 	r.lastTime = time.Now()
 	return nil
