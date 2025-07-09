@@ -59,7 +59,6 @@ func (a *audioMixer) AudioConfig() goarrg.AudioConfig {
 			Channels:  audio.ChannelsStereo(),
 			Frequency: 44100,
 		},
-		BufferLength: 32,
 	}
 }
 
@@ -72,7 +71,6 @@ func (a *audioMixer) Init(_ goarrg.PlatformInterface, cfg goarrg.AudioConfig) er
 	}
 	a.music = s
 	a.masterTrack = make(audio.Track)
-	a.bufferLength = cfg.BufferLength
 	a.bufferSamples = cfg.Spec.Frequency / 10
 
 	for _, c := range a.spec.Channels {

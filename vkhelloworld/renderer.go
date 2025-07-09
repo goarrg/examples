@@ -20,7 +20,7 @@ limitations under the License.
 package main
 
 /*
-	#cgo pkg-config: --static vulkan-headers sdl2
+	#cgo pkg-config: --static vulkan-headers sdl3
 	#cgo LDFLAGS: -lstdc++
 
 	#include "renderer.h"

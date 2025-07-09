@@ -20,7 +20,7 @@ limitations under the License.
 package texture
 
 /*
-	#cgo pkg-config: --static sdl2
+	#cgo pkg-config: --static sdl3
 	#cgo linux LDFLAGS: -lGL
 	#cgo windows LDFLAGS: -lopengl32
 */
