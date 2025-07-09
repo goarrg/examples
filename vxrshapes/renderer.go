@@ -238,27 +238,57 @@ func (r *renderer) Draw() float64 {
 
 	cb := frame.NewSingleUseCommandBuffer("main")
 	{
+		viewport := gmath.Extent2i32{X: frame.Surface().Extent().X, Y: frame.Surface().Extent().Y}
+		r.shapesCB.ExecutePrePass(frame, cb, viewport)
+
 		cb.ImageBarrier(
 			vxr.ImageBarrier{
 				Image: frame.Surface(),
 				Src: vxr.ImageBarrierInfo{
-					Stage:  r.shapesCB.PostExecuteSrcImageBarrierInfo().Stage,
+					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagNone,
 					Layout: vxr.ImageLayoutUndefined,
 				},
-				Dst:   r.shapesCB.PreExecuteDstImageBarrierInfo(),
+				Dst: vxr.ImageBarrierInfo{
+					Stage:  vxr.PipelineStageRenderAttachmentWrite,
+					Access: vxr.AccessFlagMemoryWrite,
+					Layout: vxr.ImageLayoutAttachmentOptimal,
+				},
 				Range: vxr.ImageSubresourceRange{BaseMipLevel: 0, NumMipLevels: 1, BaseArrayLayer: 0, NumArrayLayers: 1},
 			},
 		)
 
-		r.shapesCB.Execute(frame, cb, frame.Surface())
+		cb.RenderPassBegin("main",
+			gmath.Recti32{W: frame.Surface().Extent().X, H: frame.Surface().Extent().Y},
+			vxr.RenderParameters{FlipViewport: true},
+			vxr.RenderAttachments{
+				Color: []vxr.RenderColorAttachment{
+					{
+						Image:   frame.Surface(),
+						Layout:  vxr.ImageLayoutAttachmentOptimal,
+						LoadOp:  vxr.RenderAttachmentLoadOpClear,
+						StoreOp: vxr.RenderAttachmentStoreOpStore,
+						ColorBlend: vxr.RenderColorBlendParameters{
+							Enable:         true,
+							Equation:       vxr.RenderColorAttachmentBlendPremultipliedAlpha(),
+							ComponentFlags: frame.Surface().Format().ColorComponentFlags(),
+						},
+					},
+				},
+			})
+		r.shapesCB.ExecuteDraw(frame, cb)
+		cb.RenderPassEnd()
 
 		cb.ImageBarrier(
 			vxr.ImageBarrier{
 				Image: frame.Surface(),
-				Src:   r.shapesCB.PostExecuteSrcImageBarrierInfo(),
+				Src: vxr.ImageBarrierInfo{
+					Stage:  vxr.PipelineStageRenderAttachmentWrite,
+					Access: vxr.AccessFlagMemoryWrite,
+					Layout: vxr.ImageLayoutAttachmentOptimal,
+				},
 				Dst: vxr.ImageBarrierInfo{
-					Stage:  r.shapesCB.PreExecuteDstImageBarrierInfo().Stage,
+					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagNone,
 					Layout: vxr.ImageLayoutPresent,
 				},
@@ -268,11 +298,11 @@ func (r *renderer) Draw() float64 {
 
 		cb.Submit(
 			[]vxr.SemaphoreWaitInfo{
-				{Semaphore: frame.Surface(), Stage: r.shapesCB.PreExecuteDstImageBarrierInfo().Stage},
+				{Semaphore: frame.Surface(), Stage: vxr.PipelineStageRenderAttachmentWrite},
 			},
 			[]vxr.SemaphoreSignalInfo{
-				{Semaphore: frame.Surface(), Stage: r.shapesCB.PostExecuteSrcImageBarrierInfo().Stage},
-				{Semaphore: r.renderFinishedSemaphore, Stage: r.shapesCB.PostExecuteSrcImageBarrierInfo().Stage},
+				{Semaphore: frame.Surface(), Stage: vxr.PipelineStageRenderAttachmentWrite},
+				{Semaphore: r.renderFinishedSemaphore, Stage: vxr.PipelineStageRenderAttachmentWrite},
 			},
 		)
 	}
