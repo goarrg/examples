@@ -1,11 +1,9 @@
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
-goarrg.com v0.0.0-20250701171241-f7983bc125e9 h1:UC794ShiLvhizZtmK4mmb8yiIGSBd8Z09UDil2vdN1g=
-goarrg.com v0.0.0-20250701171241-f7983bc125e9/go.mod h1:i+3dyAQy/zpdW5pKTM2ixSjIWsH0vRDuCZEjwUVcGaA=
+goarrg.com v0.0.0-20250709235516-6d04b197d9a0 h1:fkGfemseBtQ0lz/BkrBLmaczxEJnUwTrZVGLdwj+tsY=
+goarrg.com v0.0.0-20250709235516-6d04b197d9a0/go.mod h1:i+3dyAQy/zpdW5pKTM2ixSjIWsH0vRDuCZEjwUVcGaA=
 goarrg.com/rhi/vxr v0.0.0-20250709004627-76d849ea44c9 h1:qjEIqPD1nF5L1gifUErT5S9O2TcxLnAeZdpw4sijhzg=
 goarrg.com/rhi/vxr v0.0.0-20250709004627-76d849ea44c9/go.mod h1:VoER9BntugnQuJHtepfYM5qNuCOdEt+PoChax9Mssb0=
-golang.org/x/crypto v0.39.0 h1:SHs+kF4LP+f+p14esP5jAoDpHU8Gu/v9lFRK6IT5imM=
-golang.org/x/crypto v0.39.0/go.mod h1:L+Xg3Wf6HoL4Bn4238Z6ft6KfEpN0tJGo53AAPC632U=
 golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b h1:M2rDM6z3Fhozi9O7NWsxAkg/yqS/lQJ6PmkyIV3YP+o=
 golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b/go.mod h1:3//PLf8L/X+8b4vuAfHzxeRUl04Adcb341+IGKfnqS8=
 golang.org/x/image v0.28.0 h1:gdem5JW1OLS4FbkWgLO+7ZeFzYtL3xClb97GaUzYMFE=
