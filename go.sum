@@ -1,7 +1,7 @@
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
-goarrg.com v0.0.0-20250709235516-6d04b197d9a0 h1:fkGfemseBtQ0lz/BkrBLmaczxEJnUwTrZVGLdwj+tsY=
-goarrg.com v0.0.0-20250709235516-6d04b197d9a0/go.mod h1:i+3dyAQy/zpdW5pKTM2ixSjIWsH0vRDuCZEjwUVcGaA=
+goarrg.com v0.0.0-20250710022232-3c52730a044d h1:Ojmvsa8pXcRxrUKwxqlwx3ts3Rr4vSCnJFsXBl5i7+c=
+goarrg.com v0.0.0-20250710022232-3c52730a044d/go.mod h1:i+3dyAQy/zpdW5pKTM2ixSjIWsH0vRDuCZEjwUVcGaA=
 goarrg.com/rhi/vxr v0.0.0-20250709004627-76d849ea44c9 h1:qjEIqPD1nF5L1gifUErT5S9O2TcxLnAeZdpw4sijhzg=
 goarrg.com/rhi/vxr v0.0.0-20250709004627-76d849ea44c9/go.mod h1:VoER9BntugnQuJHtepfYM5qNuCOdEt+PoChax9Mssb0=
 golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b h1:M2rDM6z3Fhozi9O7NWsxAkg/yqS/lQJ6PmkyIV3YP+o=
