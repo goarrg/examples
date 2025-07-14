@@ -52,7 +52,7 @@ func TestExamples(t *testing.T) {
 		goarrg.Config{
 			Target: target,
 			Dependencies: goarrg.Dependencies{
-				SDL:       goarrg.SDLConfig{Install: true, Build: toolchain.BuildRelease},
+				SDL:       goarrg.SDLConfig{Install: true, ForceStatic: true, Build: toolchain.BuildRelease},
 				VkHeaders: goarrg.VkHeadersConfig{Install: true},
 			},
 			BuildOptions: buildOptions,
