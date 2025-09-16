@@ -152,7 +152,7 @@ func (r *renderer) Draw() float64 {
 		)
 	}
 
-	frame.EndWithWaiter(r.renderFinishedSemaphore.WaiterForPendingValue())
+	frame.End(r.renderFinishedSemaphore.WaiterForPendingValue())
 	return 0
 }
 

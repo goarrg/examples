@@ -194,7 +194,7 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 				Semaphore: r.renderFinishedSemaphore,
 				Stage:     vxr.PipelineStageTransfer,
 			}})
-			frame.EndWithWaiter(r.renderFinishedSemaphore.WaiterForPendingValue())
+			frame.End(r.renderFinishedSemaphore.WaiterForPendingValue())
 
 			r.squareSampler = vxr.NewSampler("main", vxr.SamplerCreateInfo{
 				MagFilter:  vxr.SamplerFilterNearest,
@@ -353,7 +353,7 @@ func (r *renderer) Draw() float64 {
 		)
 	}
 
-	frame.EndWithWaiter(r.renderFinishedSemaphore.WaiterForPendingValue())
+	frame.End(r.renderFinishedSemaphore.WaiterForPendingValue())
 	return 0
 }
 
