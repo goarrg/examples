@@ -1,18 +1,18 @@
 module goarrg.com/examples
 
-go 1.23.0
+go 1.24.0
 
 require (
-	goarrg.com v0.0.0-20250714140256-f51448833f0b
-	goarrg.com/rhi/vxr v0.0.0-20250916091229-fde9383b3394
-	golang.org/x/image v0.28.0
-	golang.org/x/tools v0.34.0
+	goarrg.com v0.0.0-20251009000721-acef046cd3ee
+	goarrg.com/rhi/vxr v0.0.0-20251012195814-01f853498fb0
+	golang.org/x/image v0.32.0
+	golang.org/x/tools v0.38.0
 )
 
 require (
-	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b // indirect
-	golang.org/x/mod v0.25.0 // indirect
-	golang.org/x/sync v0.15.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
-	golang.org/x/text v0.26.0 // indirect
+	golang.org/x/exp v0.0.0-20251009144603-d2f985daa21b // indirect
+	golang.org/x/mod v0.29.0 // indirect
+	golang.org/x/sync v0.17.0 // indirect
+	golang.org/x/sys v0.37.0 // indirect
+	golang.org/x/text v0.30.0 // indirect
 )

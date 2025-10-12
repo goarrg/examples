@@ -247,12 +247,12 @@ func (r *renderer) Draw() float64 {
 				Src: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagNone,
-					Layout: vxr.ImageLayoutUndefined,
+					Layout: vxr.IMAGE_LAYOUT_UNDEFINED,
 				},
 				Dst: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagMemoryWrite,
-					Layout: vxr.ImageLayoutAttachmentOptimal,
+					Layout: vxr.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
 				},
 				Range: vxr.ImageSubresourceRange{BaseMipLevel: 0, NumMipLevels: 1, BaseArrayLayer: 0, NumArrayLayers: 1},
 			},
@@ -265,7 +265,7 @@ func (r *renderer) Draw() float64 {
 				Color: []vxr.RenderColorAttachment{
 					{
 						Image:   frame.Surface(),
-						Layout:  vxr.ImageLayoutAttachmentOptimal,
+						Layout:  vxr.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
 						LoadOp:  vxr.RenderAttachmentLoadOpClear,
 						StoreOp: vxr.RenderAttachmentStoreOpStore,
 						ColorBlend: vxr.RenderColorBlendParameters{
@@ -285,12 +285,12 @@ func (r *renderer) Draw() float64 {
 				Src: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagMemoryWrite,
-					Layout: vxr.ImageLayoutAttachmentOptimal,
+					Layout: vxr.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
 				},
 				Dst: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagNone,
-					Layout: vxr.ImageLayoutPresent,
+					Layout: vxr.IMAGE_LAYOUT_PRESENT_SRC_KHR,
 				},
 				Range: vxr.ImageSubresourceRange{BaseMipLevel: 0, NumMipLevels: 1, BaseArrayLayer: 0, NumArrayLayers: 1},
 			},

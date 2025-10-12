@@ -154,19 +154,19 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 				Src: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageNone,
 					Access: vxr.AccessFlagNone,
-					Layout: vxr.ImageLayoutUndefined,
+					Layout: vxr.IMAGE_LAYOUT_UNDEFINED,
 				},
 				Dst: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageTransfer,
 					Access: vxr.AccessFlagMemoryWrite,
-					Layout: vxr.ImageLayoutTransferDst,
+					Layout: vxr.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 				},
 				Range: vxr.ImageSubresourceRange{
 					NumMipLevels:   1,
 					NumArrayLayers: 1,
 				},
 			})
-			cb.CopyBufferToImage(b, r.squareTexture, vxr.ImageLayoutTransferDst, []vxr.BufferImageCopyRegion{
+			cb.CopyBufferToImage(b, r.squareTexture, vxr.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, []vxr.BufferImageCopyRegion{
 				{
 					ImageSubresource: vxr.ImageSubresourceLayers{NumArrayLayers: 1},
 					ImageExtent:      r.squareTexture.Extent(),
@@ -178,12 +178,12 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 				Src: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageTransfer,
 					Access: vxr.AccessFlagMemoryWrite,
-					Layout: vxr.ImageLayoutTransferDst,
+					Layout: vxr.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 				},
 				Dst: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageFragmentShader,
 					Access: vxr.AccessFlagMemoryRead,
-					Layout: vxr.ImageLayoutReadOnlyOptimal,
+					Layout: vxr.IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
 				},
 				Range: vxr.ImageSubresourceRange{
 					NumMipLevels:   1,
@@ -197,16 +197,16 @@ func (r *renderer) VkInit(platform goarrg.PlatformInterface, vkInstance goarrg.V
 			frame.End(r.renderFinishedSemaphore.WaiterForPendingValue())
 
 			r.squareSampler = vxr.NewSampler("main", vxr.SamplerCreateInfo{
-				MagFilter:  vxr.SamplerFilterNearest,
-				MinFilter:  vxr.SamplerFilterNearest,
-				MipMapMode: vxr.SamplerMipMapModeNearest,
-				BorderMode: vxr.SamplerAddressModeClampToEdge,
+				MagFilter:  vxr.SAMPLER_FILTER_NEAREST,
+				MinFilter:  vxr.SAMPLER_FILTER_NEAREST,
+				MipMapMode: vxr.SAMPLER_MIPMAP_MODE_NEAREST,
+				BorderMode: vxr.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
 			})
 			r.squareDescriptorSet = layout.NewDescriptorSet(1)
 			r.squareDescriptorSet.Bind(0, 0, vxr.DescriptorCombinedImageSamplerInfo{
 				Sampler: r.squareSampler,
 				Image:   r.squareTexture,
-				Layout:  vxr.ImageLayoutReadOnlyOptimal,
+				Layout:  vxr.IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
 			})
 		}
 	}
@@ -230,12 +230,12 @@ func (r *renderer) Draw() float64 {
 				Src: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagNone,
-					Layout: vxr.ImageLayoutUndefined,
+					Layout: vxr.IMAGE_LAYOUT_UNDEFINED,
 				},
 				Dst: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagMemoryWrite,
-					Layout: vxr.ImageLayoutAttachmentOptimal,
+					Layout: vxr.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
 				},
 				Range: vxr.ImageSubresourceRange{BaseMipLevel: 0, NumMipLevels: 1, BaseArrayLayer: 0, NumArrayLayers: 1},
 			},
@@ -244,12 +244,12 @@ func (r *renderer) Draw() float64 {
 				Src: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagMemoryWrite,
-					Layout: vxr.ImageLayoutUndefined,
+					Layout: vxr.IMAGE_LAYOUT_UNDEFINED,
 				},
 				Dst: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagMemoryWrite,
-					Layout: vxr.ImageLayoutAttachmentOptimal,
+					Layout: vxr.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
 				},
 				Range: vxr.ImageSubresourceRange{BaseMipLevel: 0, NumMipLevels: 1, BaseArrayLayer: 0, NumArrayLayers: 1},
 			},
@@ -263,8 +263,8 @@ func (r *renderer) Draw() float64 {
 					{
 						Image:             frame.Surface(),
 						ImageMultiSampled: r.multisampledImage,
-						RenderResolveMode: vxr.RenderResolveModeAverage,
-						Layout:            vxr.ImageLayoutAttachmentOptimal,
+						RenderResolveMode: vxr.RENDER_RESOLVE_MODE_AVERAGE,
+						Layout:            vxr.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
 						LoadOp:            vxr.RenderAttachmentLoadOpClear,
 						StoreOp:           vxr.RenderAttachmentStoreOpStore,
 						ColorBlend: vxr.RenderColorBlendParameters{
@@ -331,12 +331,12 @@ func (r *renderer) Draw() float64 {
 				Src: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagMemoryWrite,
-					Layout: vxr.ImageLayoutAttachmentOptimal,
+					Layout: vxr.IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
 				},
 				Dst: vxr.ImageBarrierInfo{
 					Stage:  vxr.PipelineStageRenderAttachmentWrite,
 					Access: vxr.AccessFlagNone,
-					Layout: vxr.ImageLayoutPresent,
+					Layout: vxr.IMAGE_LAYOUT_PRESENT_SRC_KHR,
 				},
 				Range: vxr.ImageSubresourceRange{BaseMipLevel: 0, NumMipLevels: 1, BaseArrayLayer: 0, NumArrayLayers: 1},
 			},
@@ -363,7 +363,7 @@ func (r *renderer) Resize(w int, h int) {
 	r.multisampledImage.Destroy()
 	r.multisampledImage = vxr.NewColorImageMultiSampled("main", info.Format, vxr.ImageMultiSampledCreateInfo{
 		Usage:   vxr.ImageUsageColorAttachment,
-		Samples: vxr.SampleCount8,
+		Samples: vxr.SAMPLE_COUNT_8,
 		Extent:  gmath.Extent2i32{X: info.Extent.X, Y: info.Extent.Y},
 	})
 }
