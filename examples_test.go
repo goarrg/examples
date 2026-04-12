@@ -19,9 +19,11 @@ package examples
 import (
 	"bufio"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -87,7 +89,7 @@ func TestExamples(t *testing.T) {
 
 	defer os.RemoveAll(tmpDir)
 
-	exec := func(rootdir string, build func(string) string) {
+	exec := func(t *testing.T, rootdir string, waitInit bool, build func(string) string) {
 		t.Helper()
 
 		filename := build(tmpDir)
@@ -106,26 +108,40 @@ func TestExamples(t *testing.T) {
 		}
 
 		errc := make(chan error, 1)
-		s := bufio.NewScanner(stderr)
-		for s.Scan() {
-			if strings.Contains(s.Text(), "Engine Init took") {
-				// send quit signal but keep the scanner flushing to capture output
-				go func() {
-					defer close(errc)
-					time.Sleep(time.Second)
-					err := sigInterrupt(cmd.Process)
-					if err != nil {
-						errc <- err
-					}
-				}()
+		kill := func() {
+			defer close(errc)
+			time.Sleep(time.Second)
+
+			if err := sigInterrupt(cmd.Process); err != nil {
+				errc <- err
+				return
 			}
-			fmt.Fprintln(os.Stderr, s.Text())
+			if err := cmd.Wait(); err != nil {
+				errc <- err
+				return
+			}
 		}
-		if err := <-errc; err != nil {
-			t.Fatal(err)
+		if !waitInit {
+			go kill()
 		}
-		if err := cmd.Wait(); err != nil {
-			t.Fatal(err)
+		go func() {
+			s := bufio.NewScanner(stderr)
+			for s.Scan() {
+				fmt.Fprintln(os.Stderr, s.Text())
+				if waitInit && strings.Contains(s.Text(), "Engine Init took") {
+					go kill()
+				}
+			}
+		}()
+
+		select {
+		case <-time.After(time.Second * 2):
+			cmd.Process.Kill()
+			t.Fatal("timeout")
+		case err := <-errc:
+			if err != nil {
+				t.Fatal(err)
+			}
 		}
 	}
 
@@ -145,13 +161,13 @@ func TestExamples(t *testing.T) {
 					continue
 				}
 
-				t.Run(f.Name(), func(t *testing.T) {
+				roodir := filepath.Join("gl", f.Name())
+				t.Run(roodir, func(t *testing.T) {
 					if strings.HasPrefix(f.Name(), "vkgl") && (!enableVK) {
 						t.Skip("Vulkan disabled, skipping", f.Name())
 					}
 
-					roodir := filepath.Join("gl", f.Name())
-					exec(roodir, func(dir string) string {
+					exec(t, roodir, true, func(dir string) string {
 						filename := filepath.Join(dir, f.Name())
 						args := []string{"build", "-tags=" + buildTags, "-o=" + filename}
 						if err := toolchain.RunDir(roodir, "go", args...); err != nil {
@@ -164,14 +180,18 @@ func TestExamples(t *testing.T) {
 		}
 	}
 
-	// test vxr
+	// test vk
 	if enableVK {
-		files, err := os.ReadDir("./vk/vxr")
-		if err != nil {
-			panic(err)
+		apiWaitMap := map[string]bool{
+			"vkm": false,
+			"vxr": true,
 		}
-		for _, f := range files {
-			if f.IsDir() {
+		for _, api := range slices.Sorted(maps.Keys(apiWaitMap)) {
+			files, err := os.ReadDir(filepath.Join("vk", api))
+			if err != nil {
+				panic(err)
+			}
+			for _, f := range files {
 				switch {
 				case f.Name() == "shared":
 					continue
@@ -180,11 +200,11 @@ func TestExamples(t *testing.T) {
 					continue
 				}
 
-				t.Run(f.Name(), func(t *testing.T) {
-					roodir := filepath.Join("vk", "vxr", f.Name())
-					exec(roodir, func(dir string) string {
+				roodir := filepath.Join("vk", api, f.Name())
+				t.Run(roodir, func(t *testing.T) {
+					exec(t, roodir, apiWaitMap[api], func(dir string) string {
 						filename := filepath.Join(dir, f.Name())
-						args := []string{"run", "goarrg.com/examples/vk/vxr/" + f.Name() + "/cmd/make"}
+						args := []string{"run", "goarrg.com/examples/vk/" + api + "/" + f.Name() + "/cmd/make"}
 						if err := toolchain.RunDir(dir, "go", args...); err != nil {
 							t.Fatal(err)
 						}

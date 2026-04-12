@@ -4,6 +4,7 @@ go 1.24.0
 
 require (
 	goarrg.com v0.0.0-20260409212226-b036a1665e0f
+	goarrg.com/lib/vkm v0.0.0-20260409213311-49267c481e4c
 	goarrg.com/rhi/vxr v0.0.0-20260407053425-ac570c3c1628
 	golang.org/x/image v0.32.0
 	golang.org/x/tools v0.39.0
