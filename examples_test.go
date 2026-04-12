@@ -52,8 +52,10 @@ func TestExamples(t *testing.T) {
 		goarrg.Config{
 			Target: target,
 			Dependencies: goarrg.Dependencies{
-				SDL:       goarrg.SDLConfig{Install: true, ForceStatic: true, Build: toolchain.BuildRelease},
-				VkHeaders: goarrg.VkHeadersConfig{Install: true},
+				SDL: goarrg.SDLConfig{Install: true, ForceStatic: true, Build: toolchain.BuildRelease},
+				Vulkan: goarrg.VulkanDependencies{
+					InstallHeaders: true,
+				},
 			},
 			BuildOptions: buildOptions,
 		},
@@ -78,11 +80,6 @@ func TestExamples(t *testing.T) {
 		golang.CleanCache()
 	}
 
-	files, err := os.ReadDir(".")
-	if err != nil {
-		panic(err)
-	}
-
 	tmpDir, err := os.MkdirTemp("", "goarrg")
 	if err != nil {
 		t.Fatal(err)
@@ -90,77 +87,111 @@ func TestExamples(t *testing.T) {
 
 	defer os.RemoveAll(tmpDir)
 
-	for _, f := range files {
-		if f.IsDir() {
-			switch {
-			case f.Name() == "shared":
-				continue
+	exec := func(rootdir string, build func(string) string) {
+		t.Helper()
 
-			case strings.HasPrefix(f.Name(), "."):
-				continue
+		filename := build(tmpDir)
+
+		cmd := runCommand(filename)
+		cmd.Dir = filepath.Join(rootdir)
+		cmd.Stdout = os.Stdout
+
+		stderr, err := cmd.StderrPipe()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if err := cmd.Start(); err != nil {
+			t.Fatal(err)
+		}
+
+		errc := make(chan error, 1)
+		s := bufio.NewScanner(stderr)
+		for s.Scan() {
+			if strings.Contains(s.Text(), "Engine Init took") {
+				// send quit signal but keep the scanner flushing to capture output
+				go func() {
+					defer close(errc)
+					time.Sleep(time.Second)
+					err := sigInterrupt(cmd.Process)
+					if err != nil {
+						errc <- err
+					}
+				}()
 			}
+			fmt.Fprintln(os.Stderr, s.Text())
+		}
+		if err := <-errc; err != nil {
+			t.Fatal(err)
+		}
+		if err := cmd.Wait(); err != nil {
+			t.Fatal(err)
+		}
+	}
 
-			t.Run(f.Name(), func(t *testing.T) {
-				if (strings.HasPrefix(f.Name(), "vk") || strings.HasPrefix(f.Name(), "vxr")) && !enableVK {
-					t.Skip("Vulkan disabled, skipping", f.Name())
-				}
-				if strings.HasPrefix(f.Name(), "gl") && !enableGL {
-					t.Skip("OpenGL disabled, skipping", f.Name())
-				}
-				if strings.HasPrefix(f.Name(), "vkgl") && (!enableVK || !enableGL) {
-					t.Skip("Vulkan and/or OpenGL disabled, skipping", f.Name())
+	// test opengl
+	if enableGL {
+		files, err := os.ReadDir("./gl")
+		if err != nil {
+			panic(err)
+		}
+		for _, f := range files {
+			if f.IsDir() {
+				switch {
+				case f.Name() == "shared":
+					continue
+
+				case strings.HasPrefix(f.Name(), "."):
+					continue
 				}
 
-				filename := filepath.Join(tmpDir, f.Name())
-
-				if runtime.GOOS == "windows" {
-					filename += ".exe"
-				}
-
-				// build
-				{
-					args := []string{"build", "-tags=" + buildTags, "-o=" + filename}
-					if err := toolchain.RunDir(f.Name(), "go", args...); err != nil {
-						t.Fatal(err)
+				t.Run(f.Name(), func(t *testing.T) {
+					if strings.HasPrefix(f.Name(), "vkgl") && (!enableVK) {
+						t.Skip("Vulkan disabled, skipping", f.Name())
 					}
+
+					roodir := filepath.Join("gl", f.Name())
+					exec(roodir, func(dir string) string {
+						filename := filepath.Join(dir, f.Name())
+						args := []string{"build", "-tags=" + buildTags, "-o=" + filename}
+						if err := toolchain.RunDir(roodir, "go", args...); err != nil {
+							t.Fatal(err)
+						}
+						return filename
+					})
+				})
+			}
+		}
+	}
+
+	// test vxr
+	if enableVK {
+		files, err := os.ReadDir("./vk/vxr")
+		if err != nil {
+			panic(err)
+		}
+		for _, f := range files {
+			if f.IsDir() {
+				switch {
+				case f.Name() == "shared":
+					continue
+
+				case strings.HasPrefix(f.Name(), "."):
+					continue
 				}
 
-				cmd := runCommand(filename)
-				cmd.Dir = filepath.Join(".", f.Name())
-				cmd.Stdout = os.Stdout
-
-				stderr, err := cmd.StderrPipe()
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				if err := cmd.Start(); err != nil {
-					t.Fatal(err)
-				}
-
-				errc := make(chan error, 1)
-				s := bufio.NewScanner(stderr)
-				for s.Scan() {
-					if strings.Contains(s.Text(), "Engine Init took") {
-						// send quit signal but keep the scanner flushing to capture output
-						go func() {
-							defer close(errc)
-							time.Sleep(time.Second)
-							err := sigInterrupt(cmd.Process)
-							if err != nil {
-								errc <- err
-							}
-						}()
-					}
-					fmt.Fprintln(os.Stderr, s.Text())
-				}
-				if err := <-errc; err != nil {
-					t.Fatal(err)
-				}
-				if err := cmd.Wait(); err != nil {
-					t.Fatal(err)
-				}
-			})
+				t.Run(f.Name(), func(t *testing.T) {
+					roodir := filepath.Join("vk", "vxr", f.Name())
+					exec(roodir, func(dir string) string {
+						filename := filepath.Join(dir, f.Name())
+						args := []string{"run", "goarrg.com/examples/vk/vxr/" + f.Name() + "/cmd/make"}
+						if err := toolchain.RunDir(dir, "go", args...); err != nil {
+							t.Fatal(err)
+						}
+						return filename
+					})
+				})
+			}
 		}
 	}
 }
